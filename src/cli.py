@@ -1,9 +1,6 @@
-# cli.py - Main CLI Interface for FileSentinel
-
-# External modules (assumed already developed)
 from auth import setAuth, checkAuth, changeUserID, changePassword
 from fileutils import setTelegramId
-from filepath_config import showfilepath, addFilePath, removeFilePath, updateFileHash, updateFileHashAll
+from filepath_config import showFilePath, addFilePath, removeFilePath, updateFileHash, updateFileHashAll
 from logger import activityLogger
 from notifier import programKilled
 from installer import uninstall
@@ -77,6 +74,7 @@ def setBotID():
     chatid = input("Enter your Telegram Chat ID: ")
     setTelegramId(botid, chatid)
     print("Telegram bot configuration saved..../\n")
+    activityLogger("Bot ID updated.")
 
 # For already installed program: check user login credentials
 def checkAuthentication():
@@ -95,13 +93,13 @@ def checkAuthentication():
 # Displays main options
 
 def showMainOptions():
-    print("""
-============== 📋 Main Menu ==============
-1. 🗂️  Configure monitored files
-2. 🤖  Change Telegram Bot configuration
-3. 🔑  Change user ID
-4. 👤  Change password
-5. ❌  Uninstall
+       print("""
+==============Main Menu ==============
+1. Configure monitored files
+2. Change Telegram Bot configuration
+3. Change user ID
+4. Change password
+5. Uninstall
 Type 'exit' to exit from program.
 """)
 
@@ -110,10 +108,10 @@ Type 'exit' to exit from program.
 def chooseMainOption():
     while True:
         choice = input("option> ").lower()
-        if choice == "exit":
+        if choice.strip().lower() == "exit":
             activityLogger("User exited program.")
             exit()
-        elif choice == "help":
+        elif choice.strip().lower() == "help":
             showMainOptions()
         elif choice == "1":
             configureMonitor()
@@ -131,13 +129,13 @@ def chooseMainOption():
 # Shows monitor file configuration menu
 
 def showFileMonOption():
-    print("""
+       print("""
 ------ File Monitor Configuration Menu ------
-1. 📄 View monitored file list
-2. ➕ Add a file path to monitor
-3. ❌ Remove a monitored file path
-4. 🔁 Update file hash signatures
-5. 🔁 Update all file hash signatures
+1.View monitored file list
+2.Add a file path to monitor
+3.Remove a monitored file path
+4.Update file hash signatures
+5.Update all file hash signatures
 Type 'exit' to return to the main menu.
 """)
 
@@ -147,9 +145,9 @@ def configureMonitor():
     while True:
         showFileMonOption()
         opt = input("option> ").lower()
-        if opt == "exit":
+        if opt.strip().lower() == "exit":
             return
-        elif opt == "help":
+        elif opt.strip().lower() == "help":
             showFileMonOption()
         elif opt == "1":
             listFile()
@@ -170,6 +168,7 @@ def changeBotID():
     chatid = input("Enter your Telegram Chat ID: ")
     setTelegramId(botid, chatid)
     print("Bot ID updated.\n")
+    activityLogger("Bot ID updated.")
 
 # Change user ID
 def setUserID():
@@ -208,7 +207,7 @@ def killProgram():
 
 # Show file list
 def listFile():
-    showfilepath()
+    showFilePath()
 
 # Add file to monitor
 def addPath():

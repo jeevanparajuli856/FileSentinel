@@ -93,7 +93,7 @@ def changePassword(new_password: str) -> bool:
     return True
 
 # Change user ID logic
-def changeUserid(new_userid: str) -> bool:
+def changeUserID(new_userid: str) -> bool:
     if not userIDLenCheck(new_userid):
         authLogger("Auth Setup", new_userid, "FAILED")
         authNotifier("Auth Setup", new_userid, "FAILED")

@@ -5,3 +5,4 @@ requirements.txt
 /dev/
 /config/
 /logs/
+/src/__pycache__
