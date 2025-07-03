@@ -7,7 +7,7 @@ from notifier import programKilled
 from installer import stop
 from getpass import getpass
 
-# Main entry point after installation check in main.py
+# This function is the main entry point after installation check in main.py
 def cliMain(newinstalled: bool): # true is new setup where false is already installed.
     bigWelcome()
     print("Type 'exit' to exit or 'clear' to clear terminal or 'help' to view commands at any time.")
@@ -33,29 +33,29 @@ ___________.__.__           _________              __  .__              .__
      \/                 \/        \/     \/     \/             \/     \/      
 """)
 
-#to clear the terminal
+#This function is used to clear the terminal
 def clear():
     os.system('cls' if os.name == 'nt' else 'clear')
+
 # Hide text input for passwords and IDs
 def hideText(prompt):
     return getpass(prompt)
 
-# Print authentication rules
+#Print authentication rules
 def authRule():
     print("\nAuth Setup Rules:")
     print("User ID Requirements: Alphanumeric only, up to 12 characters.")
     print("Password Requirements: Minimum 8 characters with at least one uppercase letter, one lowercase letter, one number, and one special character.\n")
 
-# Handles first-time or returning authentication
+# This function handles first-time or returning authentication and return boolean if setup or checking is complete
 # new: True for setup, False for login
-
 def authentication(new): # to determine whether to setup new or check.
     if new:
         return setAuthentication()
     else:
         return checkAuthentication()
 
-# New user authentication setup
+# This function help to setup new user authentication. And return true after user been able to setup. To setup it use setAuth() function from auth.py
 def setAuthentication():
     authRule()
     while True: # loop until user become able to setup new authentication
@@ -72,7 +72,7 @@ def setAuthentication():
         else:
             print("Requirements not met. Please try again.\n")
 
-# Prompt to setup Telegram bot credentials
+# This function prompt to setup Telegram bot credentials. Use helper fn from notifier.py and fileutils.py
 def setBotID():
     print("\nNow, let's configure your Telegram notifications")
     botid = input("Enter your Telegram Bot Token: ")
@@ -81,7 +81,7 @@ def setBotID():
     print("Telegram bot configuration saved..../\n")
     activityLogger("Bot ID updated.")
 
-# For already installed program: check user login credentials
+# This function will check user login credentials for already installed program. This function return true if authentication is passed. Use fn from auth.py and logger.py and notifier.py
 def checkAuthentication():
     attempts = 3
     for _ in range(attempts):
@@ -95,8 +95,8 @@ def checkAuthentication():
     programKilled("Authentication failure: 3 invalid attempts.")
     exit()
 
-# Displays main options
 
+# Displays main options
 def showMainOptions():
        print("""
 ==============Main Menu ==============
@@ -108,8 +108,7 @@ def showMainOptions():
 Type 'exit' to exit from program.
 """)
 
-# Choose main menu option
-
+# This function serve the user to choose main menu option
 def chooseMainOption():
     while True:
         choice = input("option> ").lower()
@@ -134,7 +133,6 @@ def chooseMainOption():
             print("Invalid option. Type 'help' to see available commands.")
 
 # Shows monitor file configuration menu
-
 def showFileMonOption():
        print("""
 ------ File Monitor Configuration Menu ------
@@ -146,8 +144,7 @@ def showFileMonOption():
 Type 'exit' to return to the main menu.
 """)
 
-# Monitor configuration sub-menu
-
+# This function serve the option to chosse for monitor configuration sub-menu
 def configureMonitor():
     while True:
         showFileMonOption()
@@ -171,7 +168,7 @@ def configureMonitor():
         else:
             print("Invalid option. Type 'help' to see configuration commands.")
 
-# Telegram bot ID changer
+# This function help to change telegram bot ID
 def changeBotID():
     botid = input("Enter your Telegram Bot Token: ")
     chatid = input("Enter your Telegram Chat ID: ")
@@ -179,7 +176,7 @@ def changeBotID():
     print("Bot ID updated.\n")
     activityLogger("Bot ID updated.")
 
-# Change user ID
+# This function help to change user ID
 def setUserID():
     authRule()
     for _ in range(3): #giving 3 chance to meet requirement
@@ -191,7 +188,7 @@ def setUserID():
             print("Invalid User ID. Try again.")
     print("Too many failed attempts. Returning to main menu.")
 
-# Change password
+# This function help to change password. This also have rate limiting
 def setPassword():
     authRule()
     for _ in range(3):
@@ -207,7 +204,7 @@ def setPassword():
             print("Invalid password format. Try again.")
     print("Too many failed attempts. Returning to main menu.")
 
-# Uninstall the program
+# This function help to stop monitor
 def killProgram():
     choice = input("Are you sure you want to stop FileSentinel? (Y/N): ").lower()
     if choice == 'y':
@@ -217,11 +214,11 @@ def killProgram():
         exit()
 
 #Second major option helper function
-# Show file list
+# This functio help to show file list
 def listFile():
     showFilePath()
 
-# Add file to monitor
+# This functio help to add file to monitor
 def addPath():
     path = input("Enter the complete file path: ")
     if addFilePath(path):
@@ -229,7 +226,7 @@ def addPath():
     else:
         print("Failed to add filepath.")
 
-# Remove file path
+# This function help to remove the file path from monitoring config
 def removePath():
     path = input("Enter the complete file path: ")
     if removeFilePath(path):
@@ -237,7 +234,7 @@ def removePath():
     else:
         print("Failed to delete filepath.")
 
-# Update file hash
+# This function help to update file hash
 def updateHash():
     path = input("Enter file path to update hash: ")
     if updateFileHash(path):
@@ -245,7 +242,7 @@ def updateHash():
     else:
         print("Failed to update hash.")
 
-# Update all hashes
+# This function will update all filepath hashes
 def updateAll():
     if updateFileHashAll():
         print("All file hashes updated.")

@@ -9,15 +9,15 @@ CONFIG_PATH = "C:/Users/Jeevan/Desktop/FileSentinel/config/sentinel_config.json"
 
 # Default skeleton for initial config file creation
 SKELETON = {
-    "userid": "",
-    "password": "",
+    "userid": "admin",
+    "password": "Password@123",
     "bot_id": "",
     "chat_id": "",
     "log_start_time": ""
 }
 
 # Default salt for password hashing (for consistent, reversible comparison)
-DEFAULT_SALT = "xxxxxxxxxxxxxx" #set your salt here  
+DEFAULT_SALT = "xxxxxxxxxxx" #put the consistent salting  
 
 # Ensure config file exists with skeleton
 #Ensures the sentinel_config.json file exists. If not, creates it using the default skeleton.
