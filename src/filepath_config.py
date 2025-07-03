@@ -14,7 +14,7 @@ def fileSetup():
     }
     
     try:
-        # Ensure config directory exists
+        # Ensure config directory exists and if file dont present then creat the file and write it down.
         config_dir = os.path.dirname(CONFIG_PATH)
         os.makedirs(config_dir, exist_ok=True)
         
@@ -25,7 +25,7 @@ def fileSetup():
     except Exception as e:
         return False
 
-# Reads the file_list.json config
+# This function is to read the file_list.json config in format of path:hash and return dictionary
 def readFileList():
     try:
         with open(CONFIG_PATH, "r") as f:
@@ -37,7 +37,7 @@ def readFileList():
         print(f"...Error reading file list: {e}")
         return {}
 
-# Writes the given dictionary to file_list.json
+#This function Writes the given filepath to file_list.json and if coudn't write it will resetup the file completely. Return Boolean if able to write the path or not
 def writeFileList(data):
     try:
         with open(CONFIG_PATH, "w") as f:
@@ -46,18 +46,17 @@ def writeFileList(data):
     except Exception as e:
         print(f"Error writing file list: {e}")
         print(f"Re-writing the monitoring file..")
-        fileSetup()
+        fileSetup() #later better to check from main.py to see the file present or not
         return False
 
-# Displays all monitored file paths
+# This function displays all monitored file paths
 def showFilePath():
     paths = readFileList()
     print("\nList of File Paths being monitored:\n")
     for path in paths:
         print(f" - {path}")
 
-# Validates whether the given path exists in the system and file can be read or not
-
+# This function validates whether the given path exists in the system and file can be read or not and return boolean
 def checkFilePath(path: str) -> bool:
     if not os.path.exists(path):
         print("...Invalid path. File not found on system.")
@@ -73,7 +72,7 @@ def checkFilePath(path: str) -> bool:
         print(f"Error accessing file: {path} — {e}")
         return False
 
-# Calculates SHA-256 hash of a file
+# This function open the file path and return the file hash. Calculates SHA-256 hash of a file
 def updateHash(path: str) -> str | None:
     try:
         with open(path, "rb") as f:
@@ -82,24 +81,24 @@ def updateHash(path: str) -> str | None:
     except:
         return None
 
-# Updates the hash of a specific file path in config
+# This function update the hash of a specific file path in config. Return true or false
 def updateFileHash(path: str) -> bool:
-    paths = readFileList()
-    if path in paths:
+    paths = readFileList() 
+    if path in paths: # making sure the path user given by user is in monitoring file
         new_hash = updateHash(path)
         if new_hash:
             paths[path] = new_hash
-            writeFileList(paths)
+            writeFileList(paths) #update the file hash
             fileChange(f"Hash updated for: {path}")
             activityLogger(f"Hash Updated for {path}")
             return True
     return False
 
-# Updates hashes for all file paths
+#This function helps to updates hashes for all file paths
 def updateAllFileHash():
     paths = readFileList()
     updated = 0
-    for path in paths:
+    for path in paths: # loop all path to update their new hash as baseline hash
         new_hash = updateHash(path)
         if new_hash:
             paths[path] = new_hash
@@ -109,22 +108,21 @@ def updateAllFileHash():
     activityLogger("All hashes refreshed.")
     print(f"...Updated hashes for {updated} files")
 
-# Adds a new path to monitor
+# This function adds a new path to monitor in the configuration file. Return the boolean
 def addFilePath(path: str) -> bool:
-    if not checkFilePath(path):
+    if not checkFilePath(path): # checking valid file path and can be read or not to get hash
         return False
-    paths = readFileList()
+    paths = readFileList() 
     if path in paths:
         print("...This path is already being monitored")
         return False
-    paths[path] = updateHash(path) or ""
+    paths[path] = updateHash(path) or "" #if hash not found it will update as ""
     writeFileList(paths)
     fileChange(f"File path added to monitor: {path}")
     activityLogger(f"File path: {path} added")
-    updateFileHash(path)
     return True
 
-# Removes a monitored path
+#This function removes file path from a monitored config file and remove from monitoring
 def removeFilePath(path: str) -> bool:
     paths = readFileList()
     if path in paths:
