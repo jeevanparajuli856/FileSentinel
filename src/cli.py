@@ -1,19 +1,20 @@
+import os
 from auth import setAuth, checkAuth, changeUserID, changePassword
 from fileutils import setTelegramId
 from filepath_config import showFilePath, addFilePath, removeFilePath, updateFileHash, updateFileHashAll
 from logger import activityLogger
 from notifier import programKilled
-from installer import uninstall
+from installer import stop
 from getpass import getpass
 
 # Main entry point after installation check in main.py
-def cliMain(newinstalled: bool):
+def cliMain(newinstalled: bool): # true is new setup where false is already installed.
     bigWelcome()
-    print("Type 'exit' to exit or 'help' to view commands at any time.")
+    print("Type 'exit' to exit or 'clear' to clear terminal or 'help' to view commands at any time.")
 
     # Run authentication or login
-    if not authentication(newinstalled):
-        return
+    if not authentication(newinstalled): #checking whether auth have to setup or need to validate credential
+        return 
 
     # Show main options and process user commands
     while True:
@@ -23,14 +24,18 @@ def cliMain(newinstalled: bool):
 
 # Shows a large ASCII welcome banner
 def bigWelcome():
-    print("""
-   _____ _ _      _____           _             _        _ 
-  |  ___(_) | ___|  ___|__  _ __ | |_ _ __ ___ | | _____| |
-  | |_  | | |/ _ \ |_ / _ \| '_ \| __| '__/ _ \| |/ / _ \ |
-  |  _| | | |  __/  _| (_) | | | | |_| | | (_) |   <  __/ |
-  |_|   |_|_|\___|_|  \___/|_| |_|\__|_|  \___/|_|\_\___|_|
-    """)
+  print("""
+___________.__.__           _________              __  .__              .__   
+\_   _____/|__|  |   ____  /   _____/ ____   _____/  |_|__| ____   ____ |  |  
+ |    __)  |  |  | _/ __ \ \_____  \_/ __ \ /    \   __\  |/    \_/ __ \|  |  
+ |     \   |  |  |_\  ___/ /        \  ___/|   |  \  | |  |   |  \  ___/|  |__
+ \___  /   |__|____/\___  >_______  /\___  >___|  /__| |__|___|  /\___  >____/
+     \/                 \/        \/     \/     \/             \/     \/      
+""")
 
+#to clear the terminal
+def clear():
+    os.system('cls' if os.name == 'nt' else 'clear')
 # Hide text input for passwords and IDs
 def hideText(prompt):
     return getpass(prompt)
@@ -44,7 +49,7 @@ def authRule():
 # Handles first-time or returning authentication
 # new: True for setup, False for login
 
-def authentication(new):
+def authentication(new): # to determine whether to setup new or check.
     if new:
         return setAuthentication()
     else:
@@ -53,7 +58,7 @@ def authentication(new):
 # New user authentication setup
 def setAuthentication():
     authRule()
-    while True:
+    while True: # loop until user become able to setup new authentication
         user = input("Enter new User ID: ")
         password = hideText("Enter new password: ")
         confirm = hideText("Confirm password: ")
@@ -80,14 +85,14 @@ def setBotID():
 def checkAuthentication():
     attempts = 3
     for _ in range(attempts):
-        userid = hideText("Enter your User ID: ")
+        userid = input("Enter your User ID: ")
         password = hideText("Enter your Password: ")
         if checkAuth(userid, password):
             return True
         print("Invalid username or password.\n")
     print("Too many failed attempts. Exiting...")
     activityLogger("Authentication failed: 3 invalid attempts.")
-    programKilled("Authentication failure - 3 invalid attempts.")
+    programKilled("Authentication failure: 3 invalid attempts.")
     exit()
 
 # Displays main options
@@ -99,7 +104,7 @@ def showMainOptions():
 2. Change Telegram Bot configuration
 3. Change user ID
 4. Change password
-5. Uninstall
+5. Stop Monitoring
 Type 'exit' to exit from program.
 """)
 
@@ -113,6 +118,8 @@ def chooseMainOption():
             exit()
         elif choice.strip().lower() == "help":
             showMainOptions()
+        elif choice =="clear":
+            clear()
         elif choice == "1":
             configureMonitor()
         elif choice == "2":
@@ -146,9 +153,11 @@ def configureMonitor():
         showFileMonOption()
         opt = input("option> ").lower()
         if opt.strip().lower() == "exit":
-            return
+            return #go back to  main option selection 
         elif opt.strip().lower() == "help":
             showFileMonOption()
+        elif opt =="clear":
+            clear()
         elif opt == "1":
             listFile()
         elif opt == "2":
@@ -166,13 +175,14 @@ def configureMonitor():
 def changeBotID():
     botid = input("Enter your Telegram Bot Token: ")
     chatid = input("Enter your Telegram Chat ID: ")
-    setTelegramId(botid, chatid)
+    setTelegramId(botid, chatid) #calling fileutils fn
     print("Bot ID updated.\n")
     activityLogger("Bot ID updated.")
 
 # Change user ID
 def setUserID():
-    for _ in range(3):
+    authRule()
+    for _ in range(3): #giving 3 chance to meet requirement
         new_id = input("Enter new User ID: ")
         if changeUserID(new_id):
             print("User ID updated.\n")
@@ -183,6 +193,7 @@ def setUserID():
 
 # Change password
 def setPassword():
+    authRule()
     for _ in range(3):
         pwd = hideText("Enter new password: ")
         confirm = hideText("Confirm password: ")
@@ -198,13 +209,14 @@ def setPassword():
 
 # Uninstall the program
 def killProgram():
-    choice = input("Are you sure you want to uninstall FileSentinel? (Y/N): ").lower()
+    choice = input("Are you sure you want to stop FileSentinel? (Y/N): ").lower()
     if choice == 'y':
-        uninstall()
-        print("Uninstallation complete. Exiting...")
-        activityLogger("Program uninstalled by user.")
+        print("File Monitoring Stopped. Exiting...")
+        activityLogger("Monitoring Stopped by user.")
+        stop()
         exit()
 
+#Second major option helper function
 # Show file list
 def listFile():
     showFilePath()
