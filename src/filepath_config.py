@@ -74,7 +74,7 @@ def checkFilePath(path: str) -> bool:
         return False
 
 # This function open the file path and return the file hash. Calculates SHA-256 hash of a file
-def updateHash(path: str) -> str | None:
+def getHash(path: str) -> str | None:
     try:
         with open(path, "rb") as f:
             content = f.read()
@@ -86,7 +86,7 @@ def updateHash(path: str) -> str | None:
 def updateFileHash(path: str) -> bool:
     paths = readFileList() 
     if path in paths: # making sure the path user given by user is in monitoring file
-        new_hash = updateHash(path)
+        new_hash = getHash(path)
         if new_hash:
             paths[path] = new_hash
             writeFileList(paths) #update the file hash
@@ -100,7 +100,7 @@ def updateAllFileHash():
     paths = readFileList()
     updated = 0
     for path in paths: # loop all path to update their new hash as baseline hash
-        new_hash = updateHash(path)
+        new_hash = getHash(path)
         if new_hash:
             paths[path] = new_hash
             updated += 1
@@ -117,7 +117,7 @@ def addFilePath(path: str) -> bool:
     if path in paths:
         print("...This path is already being monitored")
         return False
-    paths[path] = updateHash(path) or "" #if hash not found it will update as ""
+    paths[path] = getHash(path) or "" #if hash not found it will update as ""
     writeFileList(paths)
     fileChange(f"File path added to monitor: {path}")
     activityLogger(f"File path: {path} added")
