@@ -31,7 +31,9 @@ def sendAlert(alertMsg: str)->bool:
             "text": alertMsg
         }
         response = requests.post(url, data=payload, timeout=5)
-        if response.status_code != 200:
+        if response.status_code == 200:
+            return response.json().get("ok", False) # as just comparing status code wasnt working so using response.json to make sure the true if alert send.
+        else:
             return False
     except Exception:
         return False

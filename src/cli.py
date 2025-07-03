@@ -1,10 +1,10 @@
 import os
 from auth import setAuth, checkAuth, changeUserID, changePassword
 from fileutils import setTelegramId
-from filepath_config import showFilePath, addFilePath, removeFilePath, updateFileHash, updateFileHashAll
+from filepath_config import showFilePath, addFilePath, removeFilePath, updateFileHash, updateAllFileHash
 from logger import activityLogger
 from notifier import programKilled
-from installer import stop
+from main import stop
 from getpass import getpass
 
 # This function is the main entry point after installation check in main.py
@@ -146,8 +146,8 @@ Type 'exit' to return to the main menu.
 
 # This function serve the option to chosse for monitor configuration sub-menu
 def configureMonitor():
+    showFileMonOption()
     while True:
-        showFileMonOption()
         opt = input("option> ").lower()
         if opt.strip().lower() == "exit":
             return #go back to  main option selection 
@@ -222,29 +222,24 @@ def listFile():
 def addPath():
     path = input("Enter the complete file path: ")
     if addFilePath(path):
-        print("Filepath added.")
-    else:
-        print("Failed to add filepath.")
+        print(f"...{path} started to being monitored")
 
 # This function help to remove the file path from monitoring config
 def removePath():
     path = input("Enter the complete file path: ")
     if removeFilePath(path):
-        print("Filepath deleted.")
+        print("....Filepath deleted.")
     else:
-        print("Failed to delete filepath.")
+        print("....Path not found in monitored list.")
 
 # This function help to update file hash
 def updateHash():
     path = input("Enter file path to update hash: ")
     if updateFileHash(path):
-        print("Hash updated.")
+        print(".....Hash updated.")
     else:
-        print("Failed to update hash.")
+        print("....Invalid path. File path dont match in monitoried list!!!")
 
 # This function will update all filepath hashes
 def updateAll():
-    if updateFileHashAll():
-        print("All file hashes updated.")
-    else:
-        print("Failed to update some hashes.")
+    print(updateAllFileHash())

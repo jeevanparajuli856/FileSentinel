@@ -4,8 +4,8 @@ import hashlib
 from notifier import fileChange
 from logger import activityLogger
 
-#CONFIG_PATH = "C:/ProgramData/FileSentinel/config/file_list.json"
-CONFIG_PATH = "C:/Users/Jeevan/Desktop/FileSentinel/config/file_list.json"
+CONFIG_PATH = "C:/ProgramData/FileSentinel/config/file_list.json"
+#CONFIG_PATH = "C:/Users/Jeevan/Desktop/FileSentinel/config/file_list.json"
 
 #This function help to setup the file_list.json in the default path with default file list and return boolean if able to setup or not
 def fileSetup():
@@ -23,6 +23,7 @@ def fileSetup():
             json.dump({"paths": default_paths}, f, indent=2)
         return True
     except Exception as e:
+        print(f"[ERROR] Failed to initialize config file: {e}")
         return False
 
 # This function is to read the file_list.json config in format of path:hash and return dictionary
@@ -104,9 +105,9 @@ def updateAllFileHash():
             paths[path] = new_hash
             updated += 1
     writeFileList(paths)
-    fileChange("All file hashes updated.")
+    fileChange(f"All {updated} file hashes updated.")
     activityLogger("All hashes refreshed.")
-    print(f"...Updated hashes for {updated} files")
+    return f"...Updated hashes for {updated} files"
 
 # This function adds a new path to monitor in the configuration file. Return the boolean
 def addFilePath(path: str) -> bool:

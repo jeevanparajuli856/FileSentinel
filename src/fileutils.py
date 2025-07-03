@@ -4,8 +4,8 @@ import hashlib
 from datetime import datetime
 
 # Path to config file
-#CONFIG_PATH = "C:/ProgramData/FileSentinel/config/sentinel_config.json"
-CONFIG_PATH = "C:/Users/Jeevan/Desktop/FileSentinel/config/sentinel_config.json"
+CONFIG_PATH = "C:/ProgramData/FileSentinel/config/sentinel_config.json"
+#CONFIG_PATH = "C:/Users/Jeevan/Desktop/FileSentinel/config/sentinel_config.json"
 
 # Default skeleton for initial config file creation
 SKELETON = {
@@ -17,15 +17,17 @@ SKELETON = {
 }
 
 # Default salt for password hashing (for consistent, reversible comparison)
-DEFAULT_SALT = "xxxxxxxxxxx" #put the consistent salting  
+DEFAULT_SALT = "xxxxxxxxxx"  #change this
 
 # Ensure config file exists with skeleton
 #Ensures the sentinel_config.json file exists. If not, creates it using the default skeleton.
 def initializeConfig():
     try:
-        if not os.path.exists(CONFIG_PATH): # does nothing if exist only write if not exist we can use this in installer.py also 
-            with open(CONFIG_PATH, "w") as file:
-                json.dump(SKELETON, file, indent=2)
+        config_dir = os.path.dirname(CONFIG_PATH)
+        os.makedirs(config_dir, exist_ok=True)     # Ensure config directory exists and if file dont present then creat the file and write it down.
+        
+        with open(CONFIG_PATH, "w") as file:
+            json.dump(SKELETON, file, indent=2)
     except Exception as e:
         print(f"[ERROR] Failed to initialize config file: {e}")
 
