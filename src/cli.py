@@ -1,11 +1,16 @@
 import os
+import subprocess
+import sys
+import signal
 from auth import setAuth, checkAuth, changeUserID, changePassword
-from fileutils import setTelegramId
+from fileutils import setTelegramId,setDaemonStatus,readDaemonStatus
 from filepath_config import showFilePath, addFilePath, removeFilePath, updateFileHash, updateAllFileHash
 from logger import activityLogger
 from notifier import programKilled
-from main import stop
+from daemon import stopDaemon
 from getpass import getpass
+
+PID_FILE = "C:/ProgramData/FileSentinel/config/daemon.pid"
 
 # This function is the main entry point after installation check in main.py
 def cliMain(newinstalled: bool): # true is new setup where false is already installed.
@@ -105,6 +110,7 @@ def showMainOptions():
 3. Change user ID
 4. Change password
 5. Stop Monitoring
+6. Start Monitoring
 Type 'exit' to exit from program.
 """)
 
@@ -129,6 +135,8 @@ def chooseMainOption():
             setPassword()
         elif choice == "5":
             killProgram()
+        elif choice == "6":
+            startProgram()
         else:
             print("Invalid option. Type 'help' to see available commands.")
 
@@ -207,12 +215,44 @@ def setPassword():
 
 # This function help to stop monitor
 def killProgram():
-    choice = input("Are you sure you want to stop FileSentinel? (Y/N): ").lower()
-    if choice == 'y':
+    choice = input("Are you sure you want to stop FileSentinel? (Y/N): ").strip().lower()
+    if choice == 'y' and readDaemonStatus() !="stop":
         print("File Monitoring Stopped. Exiting...")
         activityLogger("Monitoring Stopped by user.")
-        stop()
-        exit()
+        setDaemonStatus("stop")
+
+
+#This Function help to start monitoring files.
+def startProgram():
+    try:
+        if readDaemonStatus() !="running":
+            # # Step 2: Locate daemon.py inside the bundle
+            # daemon_script = os.path.join(sys._MEIPASS if hasattr(sys, "_MEIPASS") else os.getcwd(), "daemon.py")
+
+            # # Step 3: Launch daemon in background without window (Windows only)
+            # subprocess.Popen(
+            #     [sys.executable, daemon_script],
+            #     creationflags=subprocess.CREATE_NO_WINDOW
+            # )
+
+            #For testing only
+            daemon_script = os.path.join(os.getcwd(), "C:/Users/Jeevan/Desktop/FileSentinel/dev/daemon.py")
+            subprocess.Popen(
+                [sys.executable, daemon_script],
+                creationflags=0  # Allows window to open normally
+            )
+            setDaemonStatus("running")
+
+            
+
+            print("File Monitoring started successfully.")
+        else:
+            print("File Monitoring already running.")
+
+    except Exception as e:
+        print(f"Failed to start File Monitoring: {e}")
+
+
 
 #Second major option helper function
 # This functio help to show file list
@@ -244,3 +284,36 @@ def updateHash():
 # This function will update all filepath hashes
 def updateAll():
     print(updateAllFileHash())
+
+
+
+
+
+
+
+
+
+
+
+
+def stopDaemonFromCLI():
+    try:
+        # Update config
+        setDaemonStatus("stop")
+
+        # Kill daemon process using PID
+        if os.path.exists(PID_FILE):
+            with open(PID_FILE, "r") as f:
+                pid = int(f.read().strip())
+
+            # Kill the process immediately (Windows-safe)
+            os.kill(pid, signal.SIGTERM)
+
+            print(f"Daemon (PID {pid}) terminated successfully.")
+
+            # Optional: clean up PID file
+            os.remove(PID_FILE)
+        else:
+            print("No PID file found. Daemon may not be running.")
+    except Exception as e:
+        print(f"Failed to stop daemon: {e}")
