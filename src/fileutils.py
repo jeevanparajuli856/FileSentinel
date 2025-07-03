@@ -10,14 +10,15 @@ CONFIG_PATH = "C:/ProgramData/FileSentinel/config/sentinel_config.json"
 # Default skeleton for initial config file creation
 SKELETON = {
     "userid": "admin",
-    "password": "Password@123",
+    "password": "877c7b8095b7ed0152057fca0b91ff4c8a0faea3e2d1d0f2879f2f14b05bbdcd", #Password@123
     "bot_id": "",
     "chat_id": "",
-    "log_start_time": ""
+    "log_start_time": "",
+    "last_monitor_time": ""
 }
 
 # Default salt for password hashing (for consistent, reversible comparison)
-DEFAULT_SALT = "xxxxxxxxxx"  #change this
+DEFAULT_SALT = "xxxxxxxxxxxxxxx" #salt here  
 
 # Ensure config file exists with skeleton
 #Ensures the sentinel_config.json file exists. If not, creates it using the default skeleton.
@@ -34,17 +35,14 @@ def initializeConfig():
 # Read the full config file and return as dictionary
 #Reads the configuration from sentinel_config.json. Returns the config as a dictionary. Falls back to SKELETON if file is unreadable or corrupted.
 def readConfig():
-    initializeConfig()
     try:
         with open(CONFIG_PATH, "r") as file:
             return json.load(file)
     except json.JSONDecodeError:
         print("[ERROR] Config file is corrupted. Resetting to default.")
         writeConfig(SKELETON)
-        return SKELETON
     except Exception as e:
         print(f"[ERROR] Failed to read config file: {e}")
-        return SKELETON
 
 # Overwrite the config file with provided dictionary
 def writeConfig(data: dict):
@@ -111,14 +109,33 @@ def getTelegramId() -> dict:
     }
 
 # Log Time Handling
+#Current time in format
+def getCurrentTime() ->str:
+   return datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+
 #Reads and returns the log_start_time from the config file
-def readTimeLogger() -> str:
+def readTimeLogger() :
     config = readConfig()
+    print(config)
     return config.get("log_start_time", "")
 
-
 #Updates the log_start_time field with the given timestamp. The timestamp must be in 'YYYY-MM-DD HH:MM:SS' format.
-def updateTimeLogger(currentTime: str) -> None:
+def updateTimeLogger():
     config = readConfig()
-    config["log_start_time"] = currentTime
+    config["log_start_time"] = getCurrentTime()
     writeConfig(config)
+    return True
+
+# Monitor Time Handling
+#Reads and returns the last_monitor_time from the config file
+def readTimeMonitor() -> str:
+    config = readConfig()
+    print(config)
+    return config.get("last_monitor_time", "")
+
+#Updates the last file monitored time i.e. last_monitor_time field with the given timestamp. The timestamp must be in 'YYYY-MM-DD HH:MM:SS' format.
+def updateTimeMonitor() :
+    config = readConfig()
+    config["last_monitor_time"] = getCurrentTime()
+    writeConfig(config)
+    return True

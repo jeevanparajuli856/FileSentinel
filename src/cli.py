@@ -150,6 +150,7 @@ def configureMonitor():
     while True:
         opt = input("option> ").lower()
         if opt.strip().lower() == "exit":
+            showMainOptions()
             return #go back to  main option selection 
         elif opt.strip().lower() == "help":
             showFileMonOption()

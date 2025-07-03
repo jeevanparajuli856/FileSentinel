@@ -2,7 +2,7 @@ import os # to write and delete the file
 import socket # to get ip
 from datetime import datetime
 import time
-from fileutils import readTimeLogger, updateTimeLogger
+from fileutils import readTimeLogger, updateTimeLogger, readUserID 
 
 #  Global Constants
 #logDir = "C:/ProgramData/FileSentinel/log"
@@ -11,7 +11,6 @@ authLogFile = "auth.log"
 teleLogFile = "teleAlert.log"
 activityLogFile = "activity.log"
 monitorLogFile = "monitor.log"
-
 #Helper Constants
 localIpAddress = socket.gethostbyname(socket.gethostname())
 
@@ -49,16 +48,16 @@ def telegramAlertLogger(messageSummary):
 
 # Activity Logger
 #Logs general activities performed by the user.
-def activityLogger(message, userId):
+def activityLogger(message):
     currentTime = getCurrentTime()
-    logLine = f"[{currentTime}] {message} | UserID: {userId} | IP: {localIpAddress}"
+    logLine = f"[{currentTime}] {message} | UserID: {readUserID()} | IP: {localIpAddress}"
     logWriter(logLine, activityLogFile)
 
 # File Monitor Logger
 #Logs alerts or info messages from the file integrity monitoring module.
-def monitorLogger(logLevel, message, userId):
+def monitorLogger(message):
     currentTime = getCurrentTime()
-    logLine = f"[{currentTime}] [{logLevel.upper()}] {message} | UserID: {userId} | IP: {localIpAddress}"
+    logLine = f"[{currentTime}] [ALERT] {message} | UserID: {readUserID()} | IP: {localIpAddress}"
     logWriter(logLine, monitorLogFile)
 
 # Log Purging Function
@@ -79,7 +78,7 @@ def logPurger():
                 except Exception as deleteError:
                     print(f"[LOG PURGE ERROR] Failed to delete {logFile}: {deleteError}")
 
-            updateTimeLogger(getCurrentTime())
+            updateTimeLogger()
 
     except Exception as purgeError:
         print(f"[LOG PURGE ERROR] {purgeError}")

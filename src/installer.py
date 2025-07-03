@@ -1,10 +1,10 @@
 import os
 import ctypes
 from filepath_config import fileSetup, updateAllFileHash
-from fileutils import initializeConfig, updateTimeLogger
+from fileutils import initializeConfig, updateTimeLogger, updateTimeMonitor
 
 # Constants
-BASE_DIR = r"C:\ProgramData\FileSentinel"
+BASE_DIR = r"C:/ProgramData/FileSentinel"
 CONFIG_DIR = os.path.join(BASE_DIR, "config")
 LOG_DIR = os.path.join(BASE_DIR, "logs")
 MARKER_FILE = os.path.join(BASE_DIR, ".installed")
@@ -62,5 +62,6 @@ def install():
     if installSetup():
         if updateDefaultFileHash():
             if updateTimeLogger(): # not using managePermission as it is locking my program to access directory
-                return True
+                if updateTimeMonitor():
+                    return True
     return False
