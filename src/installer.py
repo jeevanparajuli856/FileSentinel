@@ -1,7 +1,7 @@
 import os
 import ctypes
 from filepath_config import fileSetup, updateAllFileHash
-from fileutils import initializeConfig
+from fileutils import initializeConfig, updateTimeLogger
 
 # Constants
 BASE_DIR = r"C:\ProgramData\FileSentinel"
@@ -60,6 +60,7 @@ def updateDefaultFileHash():
 #This function is a master installation function that sets up directory, permissions, and file hashes. Returns True if all steps succeed, else False.
 def install():
     if installSetup():
-        if updateDefaultFileHash(): # not using managePermission as it is locking my program to access directory
-            return True
+        if updateDefaultFileHash():
+            if updateTimeLogger(): # not using managePermission as it is locking my program to access directory
+                return True
     return False
