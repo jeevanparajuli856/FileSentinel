@@ -11,9 +11,9 @@ def compareHash(current_hash: str, saved_hash: str) -> bool:
 def monitorFile():
     try:
         file_dict = readFileList()  # { "path": "hash" }
-        
+        print("Monitoring started")
         if not file_dict:
-            return
+            return False
 
         for filepath, saved_hash in file_dict.items():
             current_hash = getHash(filepath)
@@ -28,8 +28,9 @@ def monitorFile():
                 msg = f"File altered: {filepath}"
                 monitorLogger(msg)
                 fileChange(msg)
-
+        return True
     except Exception as e:
         error_msg = f"File Monitoring encountered an error: {str(e)}"
         monitorLogger(error_msg)
         fileChange(error_msg)
+        return False

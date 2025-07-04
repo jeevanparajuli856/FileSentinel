@@ -5,8 +5,8 @@ import time
 from fileutils import readTimeLogger, updateTimeLogger, readUserID 
 
 #  Global Constants
-#logDir = "C:/ProgramData/FileSentinel/log"
-logDir = "C:/Users/Jeevan/Desktop/FileSentinel/logs"
+logDir = "C:/ProgramData/FileSentinel/logs"
+#logDir = "C:/Users/Jeevan/Desktop/FileSentinel/logs"
 authLogFile = "auth.log"
 teleLogFile = "teleAlert.log"
 activityLogFile = "activity.log"

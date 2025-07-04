@@ -14,11 +14,12 @@ SKELETON = {
     "bot_id": "",
     "chat_id": "",
     "log_start_time": "",
-    "last_monitor_time": ""
+    "last_monitor_time": "",
+    "daemon_status":"stop"
 }
 
 # Default salt for password hashing (for consistent, reversible comparison)
-DEFAULT_SALT = "xxxxxxxxxxxxxxx" #salt here  
+DEFAULT_SALT = "xxxxxxxxxx" #salting  
 
 # Ensure config file exists with skeleton
 #Ensures the sentinel_config.json file exists. If not, creates it using the default skeleton.
@@ -130,12 +131,23 @@ def updateTimeLogger():
 #Reads and returns the last_monitor_time from the config file
 def readTimeMonitor() -> str:
     config = readConfig()
-    print(config)
     return config.get("last_monitor_time", "")
 
 #Updates the last file monitored time i.e. last_monitor_time field with the given timestamp. The timestamp must be in 'YYYY-MM-DD HH:MM:SS' format.
 def updateTimeMonitor() :
     config = readConfig()
     config["last_monitor_time"] = getCurrentTime()
+    writeConfig(config)
+    return True
+
+#This function help to set the daemon which is monitoring the file.
+def readDaemonStatus():
+    config = readConfig()
+    return config.get("daemon_status", "")
+
+#Updates the last file monitored time i.e. last_monitor_time field with the given timestamp. The timestamp must be in 'YYYY-MM-DD HH:MM:SS' format.
+def setDaemonStatus(status) :
+    config = readConfig()
+    config["daemon_status"] = status
     writeConfig(config)
     return True

@@ -10,7 +10,8 @@ CONFIG_PATH = "C:/ProgramData/FileSentinel/config/file_list.json"
 #This function help to setup the file_list.json in the default path with default file list and return boolean if able to setup or not
 def fileSetup():
     default_paths = {
-        "C:/Windows/System32/drivers/etc/hosts": ""
+        "C:/Windows/System32/drivers/etc/hosts": "",
+        "C:/Users/Jeevan/Desktop/testingFile.txt": ""
     }
     
     try:

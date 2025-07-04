@@ -7,10 +7,8 @@ from fileutils import setTelegramId,setDaemonStatus,readDaemonStatus
 from filepath_config import showFilePath, addFilePath, removeFilePath, updateFileHash, updateAllFileHash
 from logger import activityLogger
 from notifier import programKilled
-from daemon import stopDaemon
 from getpass import getpass
 
-PID_FILE = "C:/ProgramData/FileSentinel/config/daemon.pid"
 
 # This function is the main entry point after installation check in main.py
 def cliMain(newinstalled: bool): # true is new setup where false is already installed.
@@ -29,7 +27,7 @@ def cliMain(newinstalled: bool): # true is new setup where false is already inst
 
 # Shows a large ASCII welcome banner
 def bigWelcome():
-  print("""
+  print(r"""
 ___________.__.__           _________              __  .__              .__   
 \_   _____/|__|  |   ____  /   _____/ ____   _____/  |_|__| ____   ____ |  |  
  |    __)  |  |  | _/ __ \ \_____  \_/ __ \ /    \   __\  |/    \_/ __ \|  |  
@@ -236,14 +234,9 @@ def startProgram():
             # )
 
             #For testing only
-            daemon_script = os.path.join(os.getcwd(), "C:/Users/Jeevan/Desktop/FileSentinel/dev/daemon.py")
-            subprocess.Popen(
-                [sys.executable, daemon_script],
-                creationflags=0  # Allows window to open normally
-            )
+            daemonStart()
+            dSupportStart()
             setDaemonStatus("running")
-
-            
 
             print("File Monitoring started successfully.")
         else:
@@ -289,31 +282,27 @@ def updateAll():
 
 
 
+# Step 2: Locate daemon.py inside the bundle
+            # daemon_script = os.path.join(sys._MEIPASS if hasattr(sys, "_MEIPASS") else os.getcwd(), "daemon.py")
 
+            # # Step 3: Launch daemon in background without window (Windows only)
+            # subprocess.Popen(
+            #     [sys.executable, daemon_script],
+            #     creationflags=subprocess.CREATE_NO_WINDOW
+            # )
 
-
-
-
-
-
-def stopDaemonFromCLI():
-    try:
-        # Update config
-        setDaemonStatus("stop")
-
-        # Kill daemon process using PID
-        if os.path.exists(PID_FILE):
-            with open(PID_FILE, "r") as f:
-                pid = int(f.read().strip())
-
-            # Kill the process immediately (Windows-safe)
-            os.kill(pid, signal.SIGTERM)
-
-            print(f"Daemon (PID {pid}) terminated successfully.")
-
-            # Optional: clean up PID file
-            os.remove(PID_FILE)
-        else:
-            print("No PID file found. Daemon may not be running.")
-    except Exception as e:
-        print(f"Failed to stop daemon: {e}")
+#This function start the daemon to monitor the file in background
+def daemonStart():
+    daemon_script = os.path.join(os.getcwd(), "C:/Users/Jeevan/Desktop/FileSentinel/dev/daemon.py")
+    subprocess.Popen(
+                [sys.executable, daemon_script],
+                creationflags=0  # Allows window to open normally
+            )
+    
+#This function start the watch dog to monitor the file monitor is running or not in background
+def dSupportStart():
+    daemon_script = os.path.join(os.getcwd(), "C:/Users/Jeevan/Desktop/FileSentinel/dev/dSupport.py")
+    subprocess.Popen(
+                [sys.executable, daemon_script],
+                creationflags=0  # Allows window to open normally
+            )
