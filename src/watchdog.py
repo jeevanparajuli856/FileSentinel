@@ -1,8 +1,10 @@
+import os
+import sys
 import time
 import psutil # type: ignore
 import subprocess
+from daemonStartHelp import daemonStart
 from fileutils import readDaemonStatus,readDaemonStatus
-from cli import daemonStart  # ensure this returns subprocess.Popen object or is callable
 from logger import activityLogger
 from notifier import fileChange
 from logger import activityLogger
@@ -11,6 +13,13 @@ from notifier import fileChange
 PID_PATH = "C:/ProgramData/FileSentinel/config/daemon.pid" 
 
 
+def isCorrectDaemon(pid):
+    try:
+        proc = psutil.Process(pid)
+        return "daemon.exe" in proc.name().lower()
+    except:
+        return False
+    
 #This function check whether daemon still running or not
 def isPIDRunning(pid):
     return psutil.pid_exists(pid)
@@ -32,12 +41,18 @@ def monitorDaemon():
             activityLogger("Watch Dog stopped to run")
             break
         pid = readDaemonPID()
-        if pid and not isPIDRunning(pid): # this will prevent from the unexpected crash of daemon and it will restart it.
+        if pid and (not isPIDRunning(pid) or not isCorrectDaemon(pid)): # this will prevent from the unexpected crash of daemon and it will restart it.
             status = readDaemonStatus()
             if status == "running":
-                activityLogger("Found File monitored to forced stopped. Restarting")
-                fileChange("Found File monitored to forced stopped. Restarting")
-                daemonStart()  # This must start it as subprocess and rewrite daemon.pid
+                try:
+                    activityLogger("Found File monitored to forced stopped. Restarting")
+                    fileChange("Found File monitored to forced stopped. Restarting")
+                    daemonStart()# This must start it as subprocess and rewrite daemon.pid
+
+                except Exception as e:
+                    activityLogger(f"[!] Failed to restart daemon from watchdog: {e}")
+                    fileChange(f"Watchdog failed to restart daemon: {e}")
+
         time.sleep(5) # sleep when dSupport will run
         print(readDaemonPID())
 
@@ -49,4 +64,4 @@ if __name__ == "__main__":
     activityLogger("Watch dog started to run")
     print(readDaemonPID())
     monitorDaemon()
-    exit(0)
+    sys.exit(0)

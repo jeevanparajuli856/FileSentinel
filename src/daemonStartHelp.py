@@ -7,8 +7,12 @@ def daemonStart():
     base_dir = os.path.dirname(os.path.abspath(sys.executable))
     print(base_dir)
 
-    # Point to daemon.exe in the same folder as main executable
-    daemon_exe = os.path.join(base_dir, "daemon.exe")
+
+    # Path to the services folder
+    services_dir = os.path.join(base_dir, "services")
+
+    # Full path to daemon.exe
+    daemon_exe = os.path.join(services_dir, "daemon.exe")
 
     if not os.path.exists(daemon_exe):
         print("[!] daemon.exe not found.")

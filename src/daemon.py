@@ -37,21 +37,27 @@ def protectDaemon():
                 time.sleep(10)  # Sleep 60s between checks
             else:
                 print("File monitor stop command received. Stopping")
-                activityLogger("file monitor stop command received. Stopping")
-                fileChange("file monitor stop command received. Stopping")  
+                activityLogger("File monitor stop command received. Stopping")
+                fileChange("File monitor stop command received. Stopping")  
                 break
         except Exception as e:
             activityLogger(f"File monitor encountered an error: {str(e)}. Restart by stopping and starting it")
             fileChange(f"Daemon encountered an error: {str(e)}.")
 
 def stopFlag()->bool:
-    return readDaemonStatus()=="stop" 
+    return readDaemonStatus()=="stop"
 
-# Entry point for launching the daemon
 if __name__ == "__main__":
-    print("Launching Daemon")
-    activityLogger("File Monitoring Started")
-    with open("C:/ProgramData/FileSentinel/config/daemon.pid", "w") as f: # this will help to grab the pid of the daemon process by creating file
-        f.write(str(os.getpid()))
-    protectDaemon()
-    exit(0)
+    try:
+        print("Launching Daemon")
+        activityLogger("File Monitoring Started")
+        with open("C:/ProgramData/FileSentinel/config/daemon.pid", "w") as f:
+            f.write(str(os.getpid()))
+        protectDaemon()
+        activityLogger("Daemon exiting cleanly")
+    except Exception as e:
+        error_msg = f"[FATAL] Daemon crashed unexpectedly: {str(e)}"
+        print(error_msg)
+        activityLogger(error_msg)
+    finally:
+        sys.exit(0)

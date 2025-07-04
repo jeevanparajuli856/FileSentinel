@@ -1,13 +1,16 @@
 import os
 import subprocess
 import sys
+import ctypes
 import signal
+import time
 from auth import setAuth, checkAuth, changeUserID, changePassword
 from fileutils import setTelegramId,setDaemonStatus,readDaemonStatus
 from filepath_config import showFilePath, addFilePath, removeFilePath, updateFileHash, updateAllFileHash
 from logger import activityLogger
 from notifier import programKilled
 from getpass import getpass
+from daemonStartHelp import daemonStart
 
 
 # This function is the main entry point after installation check in main.py
@@ -107,8 +110,8 @@ def showMainOptions():
 2. Change Telegram Bot configuration
 3. Change user ID
 4. Change password
-5. Stop Monitoring
-6. Start Monitoring
+5. Start Monitoring
+6. Stop Monitoring
 Type 'exit' to exit from program.
 """)
 
@@ -118,7 +121,7 @@ def chooseMainOption():
         choice = input("option> ").lower()
         if choice.strip().lower() == "exit":
             activityLogger("User exited program.")
-            exit()
+            sys.exit(0)
         elif choice.strip().lower() == "help":
             showMainOptions()
         elif choice =="clear":
@@ -131,9 +134,9 @@ def chooseMainOption():
             setUserID()
         elif choice == "4":
             setPassword()
-        elif choice == "5":
-            killProgram()
         elif choice == "6":
+            killProgram()
+        elif choice == "5":
             startProgram()
         else:
             print("Invalid option. Type 'help' to see available commands.")
@@ -215,7 +218,7 @@ def setPassword():
 def killProgram():
     choice = input("Are you sure you want to stop FileSentinel? (Y/N): ").strip().lower()
     if choice == 'y' and readDaemonStatus() !="stop":
-        print("File Monitoring Stopped. Exiting...")
+        print("File Monitoring Stopped. Stopping...")
         activityLogger("Monitoring Stopped by user.")
         setDaemonStatus("stop")
 
@@ -224,21 +227,10 @@ def killProgram():
 def startProgram():
     try:
         if readDaemonStatus() !="running":
-            # # Step 2: Locate daemon.py inside the bundle
-            # daemon_script = os.path.join(sys._MEIPASS if hasattr(sys, "_MEIPASS") else os.getcwd(), "daemon.py")
-
-            # # Step 3: Launch daemon in background without window (Windows only)
-            # subprocess.Popen(
-            #     [sys.executable, daemon_script],
-            #     creationflags=subprocess.CREATE_NO_WINDOW
-            # )
-
-            #For testing only
-            daemonStart()
-            dSupportStart()
             setDaemonStatus("running")
-
-            print("File Monitoring started successfully.")
+            daemonStart()
+            time.sleep(2)
+            dSupportStart()
         else:
             print("File Monitoring already running.")
 
@@ -278,31 +270,37 @@ def updateHash():
 def updateAll():
     print(updateAllFileHash())
 
-
-
-
-
-# Step 2: Locate daemon.py inside the bundle
-            # daemon_script = os.path.join(sys._MEIPASS if hasattr(sys, "_MEIPASS") else os.getcwd(), "daemon.py")
-
-            # # Step 3: Launch daemon in background without window (Windows only)
-            # subprocess.Popen(
-            #     [sys.executable, daemon_script],
-            #     creationflags=subprocess.CREATE_NO_WINDOW
-            # )
-
-#This function start the daemon to monitor the file in background
-def daemonStart():
-    daemon_script = os.path.join(os.getcwd(), "C:/Users/Jeevan/Desktop/FileSentinel/dev/daemon.py")
-    subprocess.Popen(
-                [sys.executable, daemon_script],
-                creationflags=0  # Allows window to open normally
-            )
-    
-#This function start the watch dog to monitor the file monitor is running or not in background
+#This function main purpose is to call dsupport.py which is executable and it check whether the daemon is running or not
 def dSupportStart():
-    daemon_script = os.path.join(os.getcwd(), "C:/Users/Jeevan/Desktop/FileSentinel/dev/dSupport.py")
-    subprocess.Popen(
-                [sys.executable, daemon_script],
-                creationflags=0  # Allows window to open normally
-            )
+ # Determine base directory (whether running as .py or bundled .exe)
+    base_dir = os.path.dirname(os.path.abspath(sys.executable))
+    print(base_dir)
+
+    # Path to the services folder
+    services_dir = os.path.join(base_dir, "services")
+
+    # Full path to daemon.exe
+    watchdog_exe = os.path.join(services_dir, "daemon.exe")
+
+    if not os.path.exists(watchdog_exe):
+        print("[!] watchdog.exe not found.")
+        return
+    try:
+        # Use ShellExecuteW with "runas" verb to elevate
+        ctypes.windll.shell32.ShellExecuteW(
+            None,              # hwnd
+            "runas",           # operation => run as admin
+            watchdog_exe,      # file
+            None,              # parameters
+            None,              # directory
+            1                  # show window
+        )
+        print("[+] daemon.exe started with admin rights.")
+    except Exception as e:
+        print(f"[!] Failed to start watchdog.exe: {e}")
+
+def enableAutoStartup():
+    exe_path = os.path.join(os.path.dirname(os.path.abspath(sys.executable)), "watchdog.exe")
+    cmd = f'schtasks /Create /SC ONLOGON /TN "FileSentinelWatchdog" /TR "{exe_path}" /RL HIGHEST /F'
+    os.system(cmd)
+    activityLogger("[+] Watchdog will now auto-start on system boot.")

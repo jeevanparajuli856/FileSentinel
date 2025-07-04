@@ -19,7 +19,7 @@ SKELETON = {
 }
 
 # Default salt for password hashing (for consistent, reversible comparison)
-DEFAULT_SALT = "xxxxxxxxxx" #salting  
+DEFAULT_SALT = "xxxxxxxxxx"  
 
 # Ensure config file exists with skeleton
 #Ensures the sentinel_config.json file exists. If not, creates it using the default skeleton.
