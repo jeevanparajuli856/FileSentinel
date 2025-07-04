@@ -1,48 +1,53 @@
 # 🛡️ FileSentinel
 
-**FileSentinel** is a CLI-based defensive cybersecurity tool designed to **monitor the integrity of sensitive files** on a system in real time. Built for sysadmins and security enthusiasts, FileSentinel acts as a background daemon, watching for unauthorized file changes and sending **instant Telegram alerts** when tampering is detected.
+**FileSentinel** is a Windows-only CLI-based defensive cybersecurity tool built to help system administrators and security-minded users monitor the integrity of sensitive files in real time. It runs as a persistent background daemon and watches for unauthorized file changes using cryptographic hash comparison. If any tampering is detected, it sends instant alerts via Telegram and logs the event for further review.
 
 ---
 
-## What It Does
+## 🔧 What It Does
 
-- 📁 **Monitors specified file paths** for changes (including default critical system files)
-- 🔐 Uses cryptographic hashing to detect unauthorized modifications
-- 🔔 Sends alerts via **Telegram** on file tampering
-- 📜 Maintains activity and authentication logs with auto-cleanup
-- 🧑‍💻 Includes an admin-authenticated CLI interface for secure management
-- 🧱 Self-monitors for integrity and resists unauthorized termination
-
----
-
-## Features (Planned/Active)
-
-- [x] File hash generation and comparison  
-- [x] Real-time daemon service  
-- [x] Telegram notification integration  
-- [x] Secure password/user ID authentication  
-- [x] File access logging system  
-- [ ] Web dashboard integration *(Coming Soon)*  
-- [ ] Encrypted backup of hash values  
-- [ ] Advanced evasion detection & rule tuning  
+- 📁 Monitors user-specified and default critical system file paths
+- 🔐 Detects unauthorized modifications using SHA-256 hashing
+- 🔔 Sends real-time Telegram alerts on any detected changes
+- 🧑‍💻 Provides an admin-authenticated CLI for secure tool management
+- 📜 Maintains detailed logs of authentication attempts, monitoring events, and alert messages
+- 🔄 Self-monitors and resists unauthorized shutdown or tampering
+- 🗑️ Automatically purges logs older than 2 days
 
 ---
 
-## Development Status
+## ✅ Current Features
 
-> **This project is currently in active development.**  
-> A stable version will be released soon. Stay tuned!
-
----
-
-## Note
-
-- This tool is intended for **educational and professional system defense use**.
-- It requires **Python 3.8+** and **admin/root privileges** for some features.
+- Real-time file integrity monitoring via daemon process  
+- CLI-based configuration and authentication system  
+- Telegram alert integration with fallback logging  
+- Encrypted configuration and hash storage  
+- Secure log handling and cleanup  
+- Modular code structure (monitoring, logging, auth, alerting, config)
 
 ---
 
-## Stay Updated
+## ⚠️ Important Notes
 
-Want to contribute, test, or follow the release?  
-⭐️ Star the repo and stay tuned for version `v1.0`!
+- This tool is **not open for public contribution or feature extension**.
+- Built primarily for **educational, personal, and defensive security purposes**.
+- Requires **Python 3.8+** and **administrator privileges**.
+- No future AI versions, web dashboard, or other major updates are planned.
+
+---
+
+## 🚀 Getting Started
+
+To use FileSentinel:
+
+1. Clone this repository.
+2. Run `FileSentinel.exe` with administrator privileges.
+3. Follow the CLI setup for authentication and Telegram alert config.
+4. File monitoring begins automatically on startup.
+
+---
+
+## 📌 Stay Updated
+
+This tool is currently under personal development and not intended for general public release or community feature expansion. However, you may ⭐️ star the repo if you'd like to track updates or changes.
+
