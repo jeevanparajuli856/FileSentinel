@@ -3,7 +3,7 @@ import sys
 import time
 import psutil # type: ignore
 import subprocess
-from daemonStartHelp import daemonStart
+from daemonStartHelp import daemonStartWatchdog
 from fileutils import readDaemonStatus,readDaemonStatus
 from logger import activityLogger
 from notifier import fileChange
@@ -47,13 +47,13 @@ def monitorDaemon():
                 try:
                     activityLogger("Found File monitored to forced stopped. Restarting")
                     fileChange("Found File monitored to forced stopped. Restarting")
-                    daemonStart()# This must start it as subprocess and rewrite daemon.pid
+                    daemonStartWatchdog()# This must start it as subprocess and rewrite daemon.pid
 
                 except Exception as e:
                     activityLogger(f"[!] Failed to restart daemon from watchdog: {e}")
                     fileChange(f"Watchdog failed to restart daemon: {e}")
 
-        time.sleep(5) # sleep when dSupport will run
+        time.sleep(10) # sleep when dSupport will run
         print(readDaemonPID())
 
 def stopFlag()->bool:

@@ -36,7 +36,7 @@ def readFileList():
     except FileNotFoundError:
         return {}
     except Exception as e:
-        print(f"...Error reading file list: {e}")
+        print(f"[!] Error reading file list: {e}")
         return {}
 
 #This function Writes the given filepath to file_list.json and if coudn't write it will resetup the file completely. Return Boolean if able to write the path or not
@@ -46,32 +46,32 @@ def writeFileList(data):
             json.dump({"paths": data}, f, indent=2)
             return True
     except Exception as e:
-        print(f"Error writing file list: {e}")
-        print(f"Re-writing the monitoring file..")
+        print(f"[!] Error writing file list: {e}")
+        print(f"[+] Rewriting the monitoring file...")
         fileSetup() #later better to check from main.py to see the file present or not
         return False
 
 # This function displays all monitored file paths
 def showFilePath():
     paths = readFileList()
-    print("\nList of File Paths being monitored:\n")
+    print("\n[+] List of file paths being monitored:\n")
     for path in paths:
         print(f" - {path}")
 
 # This function validates whether the given path exists in the system and file can be read or not and return boolean
 def checkFilePath(path: str) -> bool:
     if not os.path.exists(path):
-        print("...Invalid path. File not found on system.")
+        print("[!] Invalid path. File not found on system.")
         return False
     # Try opening the file to ensure it's readable
     try:
         with open(path, "rb"):
             return True
     except PermissionError:
-        print(f"...Permission denied. Cannot read file: {path} so, cannot be added")
+        print(f"[!] Permission denied: Cannot read file '{path}', so it cannot be added.")
         return False
     except Exception as e:
-        print(f"Error accessing file: {path} — {e}")
+        print(f"[!] Error accessing file '{path}': {e}")
         return False
 
 # This function open the file path and return the file hash. Calculates SHA-256 hash of a file
@@ -106,9 +106,9 @@ def updateAllFileHash():
             paths[path] = new_hash
             updated += 1
     writeFileList(paths)
-    fileChange(f"All {updated} file hashes updated.")
-    activityLogger("All hashes refreshed.")
-    return f"...Updated hashes for {updated} files"
+    fileChange(f"All {updated} file hashes updated successfully.")
+    activityLogger("All hashes refreshed successfully.")
+    return f"[+] Updated hashes for {updated} files."
 
 # This function adds a new path to monitor in the configuration file. Return the boolean
 def addFilePath(path: str) -> bool:
@@ -116,11 +116,11 @@ def addFilePath(path: str) -> bool:
         return False
     paths = readFileList() 
     if path in paths:
-        print("...This path is already being monitored")
+        print("[!] This path is already being monitored.")
         return False
     paths[path] = getHash(path) or "" #if hash not found it will update as ""
     writeFileList(paths)
-    fileChange(f"File path added to monitor: {path}")
+    fileChange(f" File path added to monitor: '{path}' ")
     activityLogger(f"File path: {path} added")
     return True
 

@@ -36,26 +36,26 @@ def userIDLenCheck(userid: str) -> bool:
 # First-time authentication setup.
 def setAuth(userid: str, password: str) -> bool:
     if not userIDLenCheck(userid):
-        authLogger("Auth Setup", userid, "FAILED")
-        authNotifier("Auth Setup", userid, "FAILED")
+        authLogger("New Auth Setup", userid, "FAILED")
+        authNotifier("New Auth Setup", userid, "FAILED")
         return False
     if not setUserID(userid):
-        authLogger("Auth Setup", userid, "FAILED")
-        authNotifier("Auth Setup", userid, "FAILED")
+        authLogger("New Auth Setup", userid, "FAILED")
+        authNotifier("New Auth Setup", userid, "FAILED")
         return False
 
     if not checkPasswordLen(password):
-        authLogger("Auth Setup", userid, "FAILED")
-        authNotifier("Auth Setup", userid, "FAILED")
+        authLogger("New Auth Setup", userid, "FAILED")
+        authNotifier("New Auth Setup", userid, "FAILED")
         return False
 
     if not setPassword(password):
-        authLogger("Auth Setup", userid, "FAILED")
-        authNotifier("Auth Setup", userid, "FAILED")
+        authLogger("New Auth Setup", userid, "FAILED")
+        authNotifier("New Auth Setup", userid, "FAILED")
         return False
 
-    authLogger("Auth Setup", userid, "SUCCESS")
-    authNotifier("Auth Setup", userid, "SUCCESS")
+    authLogger("New Auth Setup", userid, "SUCCESS")
+    authNotifier("New Auth Setup", userid, "SUCCESS")
     return True
 
 # Auth check during login
@@ -67,44 +67,44 @@ def checkAuth(userid: str, password: str) -> bool:
     input_password_hash = hashPassword(password)
 
     if userIDLenCheck(userid) and input_userid == stored_userid and input_password_hash == stored_password_hash:
-        authLogger("LOGIN_ATTEMPT", userid, "SUCCESS")
-        authNotifier("LOGIN_ATTEMPT", userid, "SUCCESS")
+        authLogger("Login Attempt", userid, "SUCCESS")
+        authNotifier("Login Attempt", userid, "SUCCESS")
         return True
     else:
-        authLogger("LOGIN_ATTEMPT", userid, "FAILED")
-        authNotifier("LOGIN_ATTEMPT", userid, "FAILED")
+        authLogger("Login Attempt", userid, "FAILED")
+        authNotifier("Login Attempt", userid, "FAILED")
         return False
 
 # Change password logic
 def changePassword(new_password: str) -> bool:
     userid = readUserID()
     if not checkPasswordLen(new_password):
-        authLogger("Password Change", userid, "FAILED")
-        authNotifier("Password Change", userid, "FAILED")
+        authLogger("Password change attempt", userid, "FAILED")
+        authNotifier("Password change attempt", userid, "FAILED")
         return False
 
     if not setPassword(new_password):
-        authLogger("Password Change", userid, "FAILED")
-        authNotifier("Password Change", userid, "FAILED")
+        authLogger("Password change attempt", userid, "FAILED")
+        authNotifier("Password change attempt", userid, "FAILED")
         return False
 
-    authLogger("Password Change", userid, "SUCCESS")
-    authNotifier("Password Change", userid, "SUCCESS")
+    authLogger("Password change attempt", userid, "SUCCESS")
+    authNotifier("Password change attempt", userid, "SUCCESS")
     return True
 
 # Change user ID logic
 def changeUserID(new_userid: str) -> bool:
     if not userIDLenCheck(new_userid):
-        authLogger("Auth Setup", new_userid, "FAILED")
-        authNotifier("Auth Setup", new_userid, "FAILED")
+        authLogger("UserID change attempt", new_userid, "FAILED")
+        authNotifier("UserID change attempt", new_userid, "FAILED")
         return False
     if not setUserID(new_userid):
-        authLogger("Auth Setup", new_userid, "FAILED")
-        authNotifier("Auth Setup", new_userid, "FAILED")
+        authLogger("UserID change attempt", new_userid, "FAILED")
+        authNotifier("UserID change attempt", new_userid, "FAILED")
         return False
 
-    authLogger("UserID Change", new_userid, "SUCCESS")
-    authNotifier("UserID Change", new_userid, "SUCCESS")
+    authLogger("UserID change attempt", new_userid, "SUCCESS")
+    authNotifier("UserID change attempt", new_userid, "SUCCESS")
     return True
 
 # log format: [2025-06-28 14:45:02] LOGIN_ATTEMPT/UserID Change/Password Change/Auth Setup | UserID: userid | IP: 127.0.0.1 | Status: SUCCESS/FAILED

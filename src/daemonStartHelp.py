@@ -5,14 +5,39 @@ import ctypes
 def daemonStart():
  # Determine base directory (whether running as .py or bundled .exe)
     base_dir = os.path.dirname(os.path.abspath(sys.executable))
-    print(base_dir)
-
 
     # Path to the services folder
     services_dir = os.path.join(base_dir, "services")
 
     # Full path to daemon.exe
     daemon_exe = os.path.join(services_dir, "daemon.exe")
+
+    if not os.path.exists(daemon_exe):
+        print("[!] daemon.exe not found.")
+        return
+
+    try:
+        # Use ShellExecuteW with "runas" verb to elevate
+        ctypes.windll.shell32.ShellExecuteW(
+            None,              # hwnd
+            "runas",           # operation => run as admin
+            daemon_exe,        # file
+            None,              # parameters
+            None,              # directory
+            1                  # show window
+        )
+        print("[+] daemon.exe started with admin rights.")
+        
+    except Exception as e:
+        print(f"[!] Failed to start daemon.exe: {e}")
+
+#This function is for watchdog to restart the daemon if found stopped
+def daemonStartWatchdog():
+ # Determine base directory (whether running as .py or bundled .exe)
+    base_dir = os.path.dirname(os.path.abspath(sys.executable))
+
+    # Full path to daemon.exe
+    daemon_exe = os.path.join(base_dir, "daemon.exe")
 
     if not os.path.exists(daemon_exe):
         print("[!] daemon.exe not found.")

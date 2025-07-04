@@ -30,23 +30,24 @@ def installSetup():
         print(f"[!] Installation failed: {e}")
         return False
 
-#This function restricts access to the config directory so only administrators can access it. Works on Windows using icacls command.
-def managePermission():
-    try:
-          # Remove inherited permissions
-        os.system(f'icacls "{CONFIG_DIR}" /inheritance:r')
+#To make the configuration file of the program to only admin access we can use this function but have to run main.py with admin right to work
+# #This function restricts access to the config directory so only administrators can access it. Works on Windows using icacls command.
+# def managePermission():
+#     try:
+#           # Remove inherited permissions
+#         os.system(f'icacls "{CONFIG_DIR}" /inheritance:r')
 
-        # Grant full access to SYSTEM and Administrators (your tool runs as Admin)
-        os.system(f'icacls "{CONFIG_DIR}" /grant:r SYSTEM:F')
-        os.system(f'icacls "{CONFIG_DIR}" /grant:r Administrators:F')
+#         # Grant full access to SYSTEM and Administrators (your tool runs as Admin)
+#         os.system(f'icacls "{CONFIG_DIR}" /grant:r SYSTEM:F')
+#         os.system(f'icacls "{CONFIG_DIR}" /grant:r Administrators:F')
 
-        # Deny WRITE access to Users and Everyone (read is OK for basic system ops)
-        os.system(f'icacls "{CONFIG_DIR}" /grant:r Users:RW')
+#         # Deny WRITE access to Users and Everyone (read is OK for basic system ops)
+#         os.system(f'icacls "{CONFIG_DIR}" /grant:r Users:RW')
 
-        return True
-    except Exception as e:
-        print(f"[!] managePermission() failed: {e}")
-        return False
+#         return True
+#     except Exception as e:
+#         print(f"[!] managePermission() failed: {e}")
+#         return False
 
 #This function calls the function to update hashes for all monitored files.
 def updateDefaultFileHash():
@@ -54,7 +55,7 @@ def updateDefaultFileHash():
         a= updateAllFileHash()
         return True
     except Exception as e:
-        print(f"[!] updateDefaultFileHash() failed: {e}")
+        print(f"[!] Failed to update hashes of default file paths: {e}")
         return False
 
 #This function is a master installation function that sets up directory, permissions, and file hashes. Returns True if all steps succeed, else False.

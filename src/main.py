@@ -1,4 +1,5 @@
 import os
+import sys
 from installer import install
 from cli import cliMain
 
@@ -16,15 +17,15 @@ def checkInstallation():
         print("installed")
         return False
     if not os.path.exists(BASE_DIR):
-        print("[!] Missing or incomplete installation detected. Reinstalling components...1")
+        print("[!] Missing or incomplete installation detected. Reinstalling components...")
         return False
 
     if not os.path.exists(CONFIG_DIR) or not os.path.exists(LOG_DIR):
-        print("[!] Missing or incomplete installation detected. Reinstalling components...2")
+        print("[!] Missing or incomplete installation detected. Reinstalling components...")
         return False
 
     if not os.path.isfile(CONFIG_FILE) or not os.path.isfile(FILE_LIST):
-        print("[!] Missing or incomplete installation detected. Reinstalling components...3")
+        print("[!] Missing or incomplete installation detected. Reinstalling components...")
         return False
 
     return True
@@ -33,10 +34,11 @@ def checkInstallation():
 def main():
     if checkInstallation():
         # All good, run the CLI normally
-        cliMain(False)
+        cliMain(False,"")
     else:
         install()
-        cliMain(True)
+        cliMain(True,"[+] Hi Admin, welcome to FileSentinel. Please set up your account.")
 
 if __name__ == "__main__":
     main()
+    sys.exit(0)

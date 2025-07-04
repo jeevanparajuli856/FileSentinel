@@ -19,10 +19,10 @@ SKELETON = {
 }
 
 # Default salt for password hashing (for consistent, reversible comparison)
-DEFAULT_SALT = "xxxxxxxxxx"  
+DEFAULT_SALT = "xxxxxxxxxxx"  
 
-# Ensure config file exists with skeleton
-#Ensures the sentinel_config.json file exists. If not, creates it using the default skeleton.
+# This function ensure config file exists with skeleton
+# and also ensures the sentinel_config.json file exists. If not, creates it using the default skeleton.
 def initializeConfig():
     try:
         config_dir = os.path.dirname(CONFIG_PATH)
@@ -33,8 +33,8 @@ def initializeConfig():
     except Exception as e:
         print(f"[ERROR] Failed to initialize config file: {e}")
 
-# Read the full config file and return as dictionary
-#Reads the configuration from sentinel_config.json. Returns the config as a dictionary. Falls back to SKELETON if file is unreadable or corrupted.
+
+#The function reads the configuration from sentinel_config.json. Returns the config as a dictionary. Falls back to SKELETON if file is unreadable or corrupted.
 def readConfig():
     try:
         with open(CONFIG_PATH, "r") as file:
@@ -45,18 +45,18 @@ def readConfig():
     except Exception as e:
         print(f"[ERROR] Failed to read config file: {e}")
 
-# Overwrite the config file with provided dictionary
+# This function overwrite the config file with provided dictionary
 def writeConfig(data: dict):
     with open(CONFIG_PATH, "w") as file:
         json.dump(data, file, indent=2)
 
-# Password Handling
-#Hashes the provided password using SHA-256 and a default salt. Returns the hashed string.
+#Password Handling
+#This function hashes the provided password using SHA-256 and a default salt. Returns the hashed string.
 def hashPassword(password: str) -> str:
     salted = DEFAULT_SALT + password
     return hashlib.sha256(salted.encode()).hexdigest()
 
-#Updates the 'password' field in sentinel_config.json. Takes an already hashed password string. Returns True if successful, False on failure.
+#This function updates the 'password' field in sentinel_config.json. Takes an already hashed password string. Returns True if successful, False on failure.
 def updatePassword(password: str) -> bool:
     try:
         hashed_password= hashPassword(password)
@@ -67,13 +67,13 @@ def updatePassword(password: str) -> bool:
     except:
         return False
 
-#Reads and returns the hashed password from config.
+#This function reads and returns the hashed password from config.
 def readPassword() -> str:
     config = readConfig()
     return config.get("password", "")
 
 #User ID Handling
-#Updates the 'userid' field in the config file. Returns True if successful, False on failure.
+#This function updates the 'userid' field in the config file. Returns True if successful, False on failure.
 def updateUserID(userId: str) -> bool:
     try:
         config = readConfig()
@@ -83,14 +83,14 @@ def updateUserID(userId: str) -> bool:
     except:
         return False
 
-#Reads and returns the 'userid' from config.
+#This function reads and returns the 'userid' from config.
 def readUserID() -> str:
     config = readConfig()
     return config.get("userid", "")
 
-# Telegram Configuration
 
-#Sets or updates the Telegram bot ID and chat ID in the config file. Returns True if successful, False on failure.
+# Telegram Configuration
+#This function sets or updates the Telegram bot ID and chat ID in the config file. Returns True if successful, False on failure.
 def setTelegramId(botId: str, chatId: str) -> bool:
     try:
         config = readConfig()
@@ -101,7 +101,7 @@ def setTelegramId(botId: str, chatId: str) -> bool:
     except:
         return False
     
-#Fetches the Telegram bot ID and chat ID from the config file. Returns a dictionary
+#This function fetches the Telegram bot ID and chat ID from the config file. Returns a dictionary
 def getTelegramId() -> dict:
     config = readConfig()
     return {
@@ -109,37 +109,40 @@ def getTelegramId() -> dict:
         "chat_id": config.get("chat_id", "")
     }
 
+
 # Log Time Handling
-#Current time in format
+#This function current time in format of YYYY-MM-DD HH:MM:SS
 def getCurrentTime() ->str:
    return datetime.now().strftime("%Y-%m-%d %H:%M:%S")
 
-#Reads and returns the log_start_time from the config file
+#This function reads and returns the log_start_time from the config file
 def readTimeLogger() :
     config = readConfig()
     print(config)
     return config.get("log_start_time", "")
 
-#Updates the log_start_time field with the given timestamp. The timestamp must be in 'YYYY-MM-DD HH:MM:SS' format.
+#This function updates the log_start_time field with the given timestamp. The timestamp must be in 'YYYY-MM-DD HH:MM:SS' format.
 def updateTimeLogger():
     config = readConfig()
     config["log_start_time"] = getCurrentTime()
     writeConfig(config)
     return True
 
+
 # Monitor Time Handling
-#Reads and returns the last_monitor_time from the config file
+#This function reads and returns the last_monitor_time from the config file
 def readTimeMonitor() -> str:
     config = readConfig()
     return config.get("last_monitor_time", "")
 
-#Updates the last file monitored time i.e. last_monitor_time field with the given timestamp. The timestamp must be in 'YYYY-MM-DD HH:MM:SS' format.
+#This function updates the last file monitored time i.e. last_monitor_time field with the given timestamp. The timestamp must be in 'YYYY-MM-DD HH:MM:SS' format.
 def updateTimeMonitor() :
     config = readConfig()
     config["last_monitor_time"] = getCurrentTime()
     writeConfig(config)
     return True
 
+#Deamon and watchdog status handling
 #This function help to set the daemon which is monitoring the file.
 def readDaemonStatus():
     config = readConfig()

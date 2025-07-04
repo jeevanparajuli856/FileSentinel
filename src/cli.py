@@ -14,9 +14,10 @@ from daemonStartHelp import daemonStart
 
 
 # This function is the main entry point after installation check in main.py
-def cliMain(newinstalled: bool): # true is new setup where false is already installed.
+def cliMain(newinstalled: bool,msg:str): # true is new setup where false is already installed.
     bigWelcome()
-    print("Type 'exit' to exit or 'clear' to clear terminal or 'help' to view commands at any time.")
+    print(msg)
+    print("[+] Type 'exit' to exit, 'clear' to clear the terminal, or 'help' to view commands at any time.")
 
     # Run authentication or login
     if not authentication(newinstalled): #checking whether auth have to setup or need to validate credential
@@ -49,9 +50,9 @@ def hideText(prompt):
 
 #Print authentication rules
 def authRule():
-    print("\nAuth Setup Rules:")
-    print("User ID Requirements: Alphanumeric only, up to 12 characters.")
-    print("Password Requirements: Minimum 8 characters with at least one uppercase letter, one lowercase letter, one number, and one special character.\n")
+    print("\n[+]Auth Setup Rules:")
+    print("[+]User ID Requirements: Alphanumeric only, up to 12 characters.")
+    print("[+]Password Requirements: Minimum 8 characters with at least one uppercase letter, one lowercase letter, one number, and one special character.\n")
 
 # This function handles first-time or returning authentication and return boolean if setup or checking is complete
 # new: True for setup, False for login
@@ -69,22 +70,22 @@ def setAuthentication():
         password = hideText("Enter new password: ")
         confirm = hideText("Confirm password: ")
         if password != confirm:
-            print("Passwords don’t match! Try again.\n")
+            print("[!] Passwords don't match. Try again.\n")
             continue
         if setAuth(user, password):
-            print("Authentication setup successful.")
+            print("[+] Authentication setup successful.")
             setBotID()
             return True
         else:
-            print("Requirements not met. Please try again.\n")
+            print("[!] Requirements not met. Please try again.\n")
 
 # This function prompt to setup Telegram bot credentials. Use helper fn from notifier.py and fileutils.py
 def setBotID():
-    print("\nNow, let's configure your Telegram notifications")
+    print("\n[+] Now, let's configure your Telegram notifications.")
     botid = input("Enter your Telegram Bot Token: ")
     chatid = input("Enter your Telegram Chat ID: ")
     setTelegramId(botid, chatid)
-    print("Telegram bot configuration saved..../\n")
+    print("[+] Telegram bot configuration saved.\n")
     activityLogger("Bot ID updated.")
 
 # This function will check user login credentials for already installed program. This function return true if authentication is passed. Use fn from auth.py and logger.py and notifier.py
@@ -95,10 +96,10 @@ def checkAuthentication():
         password = hideText("Enter your Password: ")
         if checkAuth(userid, password):
             return True
-        print("Invalid username or password.\n")
-    print("Too many failed attempts. Exiting...")
+        print("[!] Invalid username or password.\n")
+    print("[!] Too many failed attempts. Exiting...")
     activityLogger("Authentication failed: 3 invalid attempts.")
-    programKilled("Authentication failure: 3 invalid attempts.")
+    programKilled("Authentication failed: 3 invalid attempts.")
     exit()
 
 
@@ -107,11 +108,12 @@ def showMainOptions():
        print("""
 ==============Main Menu ==============
 1. Configure monitored files
-2. Change Telegram Bot configuration
+2. Change Telegram bot configuration
 3. Change user ID
 4. Change password
-5. Start Monitoring
-6. Stop Monitoring
+5. Start monitoring
+6. Stop monitoring
+             
 Type 'exit' to exit from program.
 """)
 
@@ -120,7 +122,7 @@ def chooseMainOption():
     while True:
         choice = input("option> ").lower()
         if choice.strip().lower() == "exit":
-            activityLogger("User exited program.")
+            activityLogger("User exited the program.")
             sys.exit(0)
         elif choice.strip().lower() == "help":
             showMainOptions()
@@ -134,22 +136,23 @@ def chooseMainOption():
             setUserID()
         elif choice == "4":
             setPassword()
-        elif choice == "6":
-            killProgram()
         elif choice == "5":
             startProgram()
+        elif choice == "6":
+            killProgram()
         else:
             print("Invalid option. Type 'help' to see available commands.")
 
 # Shows monitor file configuration menu
 def showFileMonOption():
        print("""
------- File Monitor Configuration Menu ------
-1.View monitored file list
-2.Add a file path to monitor
-3.Remove a monitored file path
-4.Update file hash signatures
-5.Update all file hash signatures
+==== File Monitor Configuration Menu ====
+1. View monitored file list
+2. Add a file path to monitor
+3. Remove a monitored file path
+4. Update file hash signatures
+5. Update all file hash signatures
+             
 Type 'exit' to return to the main menu.
 """)
 
@@ -183,7 +186,7 @@ def changeBotID():
     botid = input("Enter your Telegram Bot Token: ")
     chatid = input("Enter your Telegram Chat ID: ")
     setTelegramId(botid, chatid) #calling fileutils fn
-    print("Bot ID updated.\n")
+    print("[+] Bot ID updated.\n")
     activityLogger("Bot ID updated.")
 
 # This function help to change user ID
@@ -192,11 +195,11 @@ def setUserID():
     for _ in range(3): #giving 3 chance to meet requirement
         new_id = input("Enter new User ID: ")
         if changeUserID(new_id):
-            print("User ID updated.\n")
+            print("[+] User ID updated.\n")
             return
         else:
-            print("Invalid User ID. Try again.")
-    print("Too many failed attempts. Returning to main menu.")
+            print("[!] Invalid user ID format. Must be alphanumeric. Try again.")
+    print("[!] Too many failed attempts. Returning to main menu.")
 
 # This function help to change password. This also have rate limiting
 def setPassword():
@@ -205,22 +208,23 @@ def setPassword():
         pwd = hideText("Enter new password: ")
         confirm = hideText("Confirm password: ")
         if pwd != confirm:
-            print("Passwords don’t match. Try again.\n")
+            print("[!] Passwords don't match. Try again.\n")
             continue
         if changePassword(pwd):
-            print("Password changed successfully.\n")
+            print("[+] Password changed successfully.\n")
             return
         else:
-            print("Invalid password format. Try again.")
-    print("Too many failed attempts. Returning to main menu.")
+            print("[!] Invalid password format. Try again.")
+    print("[!] Too many failed attempts. Returning to main menu.")
 
 # This function help to stop monitor
 def killProgram():
     choice = input("Are you sure you want to stop FileSentinel? (Y/N): ").strip().lower()
     if choice == 'y' and readDaemonStatus() !="stop":
-        print("File Monitoring Stopped. Stopping...")
-        activityLogger("Monitoring Stopped by user.")
+        print("[+] File monitoring stopped. Stopping...")
+        activityLogger("File monitoring stopped by user.")
         setDaemonStatus("stop")
+        disableAutoStartup()
 
 
 #This Function help to start monitoring files.
@@ -231,11 +235,12 @@ def startProgram():
             daemonStart()
             time.sleep(2)
             dSupportStart()
+            enableAutoStartup()
         else:
-            print("File Monitoring already running.")
+            print("[!] File monitoring is already running.")
 
     except Exception as e:
-        print(f"Failed to start File Monitoring: {e}")
+        print(f"[!] Failed to start file monitoring: {e}")
 
 
 
@@ -248,23 +253,23 @@ def listFile():
 def addPath():
     path = input("Enter the complete file path: ")
     if addFilePath(path):
-        print(f"...{path} started to being monitored")
+        print(f"[+] '{path}' is now being monitored.")
 
 # This function help to remove the file path from monitoring config
 def removePath():
     path = input("Enter the complete file path: ")
     if removeFilePath(path):
-        print("....Filepath deleted.")
+        print("[+] File path deleted.")
     else:
-        print("....Path not found in monitored list.")
+        print("[!] Path not found in monitored list.")
 
 # This function help to update file hash
 def updateHash():
     path = input("Enter file path to update hash: ")
     if updateFileHash(path):
-        print(".....Hash updated.")
+        print("[+] Hash updated.")
     else:
-        print("....Invalid path. File path dont match in monitoried list!!!")
+        print("[!] Invalid path. File path does not match any in the monitored list.")
 
 # This function will update all filepath hashes
 def updateAll():
@@ -280,7 +285,7 @@ def dSupportStart():
     services_dir = os.path.join(base_dir, "services")
 
     # Full path to daemon.exe
-    watchdog_exe = os.path.join(services_dir, "daemon.exe")
+    watchdog_exe = os.path.join(services_dir, "watchdog.exe")
 
     if not os.path.exists(watchdog_exe):
         print("[!] watchdog.exe not found.")
@@ -299,8 +304,15 @@ def dSupportStart():
     except Exception as e:
         print(f"[!] Failed to start watchdog.exe: {e}")
 
+#This function help to make the file monitor watch dog to be auto startup when everytime the pc boot.
 def enableAutoStartup():
     exe_path = os.path.join(os.path.dirname(os.path.abspath(sys.executable)), "watchdog.exe")
     cmd = f'schtasks /Create /SC ONLOGON /TN "FileSentinelWatchdog" /TR "{exe_path}" /RL HIGHEST /F'
     os.system(cmd)
-    activityLogger("[+] Watchdog will now auto-start on system boot.")
+    activityLogger("Watchdog will now auto-start on system boot.")
+
+#This function help to disable the auto startup for the watchdog.
+def disableAutoStartup():
+    cmd = 'schtasks /Delete /TN "FileSentinelWatchdog" /F'
+    os.system(cmd)
+    activityLogger("Watchdog auto-start on boot has been disabled.")

@@ -4,25 +4,25 @@ from datetime import datetime
 from fileutils import getTelegramId
 from logger import telegramAlertLogger
 
-# Returns current timestamp
+# This function returns current timestamp in YYYY-MM-DD HH:MM:SS format
 def getCurrentTime() -> str:
     return datetime.now().strftime("%Y-%m-%d %H:%M:%S")
 
-# Returns local IP address
+# This function returns local IP address of system
 def getIPAddress() -> str:
     try:
         return socket.gethostbyname(socket.gethostname())
     except Exception:
         return "127.0.0.1"
 
-# Logs alert message if Telegram sending fails
+#This function logs alert message if Telegram sending fails
 def failAlert(msg: str):
     telegramAlertLogger(msg + " | Failed to send")
 
-# Sends alert to Telegram
+# This is core function to sends alert to Telegram
 def sendAlert(alertMsg: str)->bool:
     try:
-        telegram_data = getTelegramId()
+        telegram_data = getTelegramId() # fetching bot id and chat id
         bot_id = telegram_data.get("bot_id")
         chat_id = telegram_data.get("chat_id")
         url = f"https://api.telegram.org/bot{bot_id}/sendMessage"
@@ -38,7 +38,7 @@ def sendAlert(alertMsg: str)->bool:
     except Exception:
         return False
 
-# Sends auth event alert
+# This function sends auth event alert
 def authNotifier(messageType: str, userID: str, status: str):
     msg = f"""🔐 [FileSentinel Alert]
 🕒 Time: {getCurrentTime()}
@@ -46,11 +46,11 @@ def authNotifier(messageType: str, userID: str, status: str):
 👤 UserID: {userID}
 📍 IP Address: {getIPAddress()}
 ✅ Status: {status}"""
-    if not sendAlert(msg):
+    if not sendAlert(msg): # sending alert and if not sucess send fail error msg to logger
         failAlert(messageType)
 
 
-# Sends file change alert
+#This function sends file change alert
 def fileChange(eventMsg: str):
     msg = f"""🔐 [FileSentinel Alert]
 📢 Message: {eventMsg}
@@ -60,7 +60,7 @@ def fileChange(eventMsg: str):
     if not sendAlert(msg):
         failAlert(eventMsg)
 
-# Sends program kill attempt alert
+#This function sends program kill attempt alert
 def programKilled(eventMsg: str):
     msg = f"""🔐 [FileSentinel Alert]
 📢 Message: {eventMsg}
@@ -70,7 +70,7 @@ def programKilled(eventMsg: str):
     if not sendAlert(msg):
         failAlert(eventMsg)
 
-# Sends daemon support alert
+# This function sends daemon support alert
 def dsupport(eventMsg: str):
     msg = f"""🔐 [FileSentinel Alert]
 📢 Message: {eventMsg}
@@ -81,6 +81,7 @@ def dsupport(eventMsg: str):
         failAlert(eventMsg)
 
 
+#demo format for the alert notification
 # 🔐 [FileSentinel Alert]
 # 📢 Message: LOGIN_ATTEMPT
 # 👤 UserID: admin
