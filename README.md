@@ -13,9 +13,9 @@ It runs as a **persistent background daemon**, constantly watching for unauthori
 -  Sends real-time **Telegram alerts** on file tampering
 -  Provides an **admin-authenticated CLI** interface for secure management
 -  Maintains logs for:
-  - Authentication attempts  
-  - File monitoring activity  
-  - Telegram alerts (successful & failed)
+    - Authentication attempts  
+    - File monitoring activity  
+    - Telegram alerts (successful & failed)
 -  **Self-monitors** to resist unauthorized shutdown or tampering
 -  Auto-starts monitoring daemon on every system boot
 -  Automatically purges all logs older than **2 days**
@@ -32,10 +32,9 @@ It runs as a **persistent background daemon**, constantly watching for unauthori
 -  Encrypted configuration storage (Telegram tokens, password hash, etc.)
 -  **Hash baseline updating** — update current file hash as new trusted baseline
 -  CLI menu to:
-  - Add file path to monitor  
-  - View all monitored files  
-  - Remove custom file paths  
--  All monitored config files are **write-protected** and tamper-resistant
+    - Add file path to monitor  
+    - View all monitored files  
+    - Remove custom file paths  
 -  Clean modular codebase for easy future extension
 -  Initial setup auto-installs necessary files and permissions with **admin rights**
 -  Program resists unauthorized access and modification (even by admin without CLI auth)
@@ -46,7 +45,6 @@ It runs as a **persistent background daemon**, constantly watching for unauthori
 
 -  Public contributions, suggestions, and feature requests are **welcome**!
 -  Built for **educational**, **research**, and **defensive security** purposes
--  Requires **Python 3.8+**
 -  Must be run with **Administrator privileges**
 -  Currently supports **Windows OS only**
 
@@ -56,13 +54,21 @@ It runs as a **persistent background daemon**, constantly watching for unauthori
 
 To install and use FileSentinel:
 
-1. Clone this repository:
-   ```bash
-   git clone https://github.com/jeevanparajuli856/FileSentinel.git
-2. Navigate into the project folder and run the executable with admin rights:
+1. Download and Extract the Package:
+   - Download FileSentinel_Package.zip from the Release v1 section and extract it.
+   - After extraction. ensure the folder structure is as follow:
+      - The main folder should contain FileSentinel.exe
+      - Inside the main folder, there should be a service subfolder containing: monitor.exe and watchdog.exe
+2. Double click the FileSentinel.exe file to begin setup:
     - Set your User ID and Password
     - Configure your Telegram Bot ID and Chat ID
+    - Add the file paths you want to monitor
+    - Choose to start monitoring.
 3. Done! Monitoring will now begin automatically on every system boot.
+  - This setup creates two background processes:
+    - monitor.exe- Monitor the specified files for any changes. 
+    - watchdog.exe - Ensures that monitor.exe is always running. If it stops or crashes watchdog.exe automatically restarts it and sends a Telegram alert.
+    - This mechanism ensures tamper-proof, continous file integrity monitoring.
 ![FileSentinel CLI Screenshot](assets/intro.png)
 ---
 
