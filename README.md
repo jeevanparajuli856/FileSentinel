@@ -70,6 +70,6 @@ To install and use FileSentinel:
 FileSentinel's first stable release is live!
 Feel free to test, send feedback, or even collaborate with us by emailing:
 
-📬 jeevanparajuli857@gmail.com
+📬 jeevanparajuli856@gmail.com
 
 If you like the project, consider ⭐️ starring the repo to stay updated on future features and releases.

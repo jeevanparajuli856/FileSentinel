@@ -8,7 +8,6 @@ from logger import activityLogger
 from notifier import fileChange
 
 def daemonStart():
- # Determine base directory (whether running as .py or bundled .exe)
 
     daemon_exe = r"C:\Program Files\FileSentinel\services\monitor.exe"
 
@@ -33,9 +32,9 @@ def daemonStart():
             None,              # directory
             0                  # show window
         )
-        print("[+] monitor.exe started with admin rights.")
-        activityLogger(f"monitor.exe started with admin rights.")
-        fileChange("monitor.exe started with admin rights.")
+        print("[+] File Monitor started with admin rights.")
+        activityLogger(f"File Monitor started with admin rights.")
+        fileChange("File Monitor started with admin rights.")
         
     except Exception as e:
         print(f"[!] Failed to start monitor.exe: {e}")
@@ -67,8 +66,8 @@ def daemonStartWatchdog():
             None,              # directory
             0                 # show window
         )
-        activityLogger("[+] daemon.exe re-started with admin rights.")
-        fileChange("[+] daemon.exe re-started with admin rights.")
+        activityLogger("File Monitor re-started with admin rights.")
+        fileChange("File Monitor re-started with admin rights.")
         
     except Exception as e:
         activityLogger(f"failed to start monitor.exe: {e}")
