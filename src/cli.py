@@ -279,16 +279,6 @@ def updateAll():
 
 #This function main purpose is to call dsupport.py which is executable and it check whether the daemon is running or not
 def dSupportStart():
- # Determine base directory (whether running as .py or bundled .exe)
-    # base_dir = os.path.dirname(os.path.abspath(sys.executable))
-    # print(base_dir)
-
-    # # Path to the services folder
-    # services_dir = os.path.join(base_dir, "services")
-
-    # # Full path to daemon.exe
-    # watchdog_exe = os.path.join(services_dir, "watchdog.exe")
-
 
     watchdog_exe =r"C:\Program Files\FileSentinel\services\watchdog.exe"
 
@@ -310,37 +300,6 @@ def dSupportStart():
     except Exception as e:
         print(f"[!] Failed to start watchdog.exe: {e}")
 
-
-
-# #This function help to make the file monitor watch dog to be auto startup when everytime the pc boot. Creating system to start causes issue as system dont have access to program files early
-# def enableAutoStartup():
-#     # base_path = os.path.dirname(os.path.abspath(sys.executable)) # this will give base directory
-#     # exe_path = os.path.join(base_path, "services", "watchdog.exe") # it will append service/watchdog.exe
-    
-#     exe_path = r"C:\ProgramData\FileSentinel\services\watchdog.exe"
-    
-#     if not os.path.exists(exe_path):
-#         print(f"[!] watchdog.exe not found at: {exe_path}")
-#         return
-
-#     result = subprocess.run([
-#         "schtasks",
-#         "/Create",
-#         "/SC", "ONSTART",
-#         "/TN", "FileSentinelWatchdog",
-#         "/TR", r"C:\ProgramData\FileSentinel\services\watchdog.exe",
-#         "/RU", "SYSTEM",      # Run As SYSTEM account
-#         "/DELAY", "0002:00"
-#         "/F"                  # Force overwrite
-#     ], capture_output=True, text=True)
-
-#     if result.returncode == 0:
-#         print("[+] Scheduled Task created successfully.")
-#         activityLogger("Watchdog will now auto-start on system boot.")
-#     else:
-#         print("[!] Failed to create task:")
-#         print(result.stderr)
-#         activityLogger(f"Failed to create watchdog task: {result.stderr}")
 
 
 #This function help to make the file monitor watch dog to be auto startup when everytime the pc boot. Creating system to start causes issue as system dont have access to program files early

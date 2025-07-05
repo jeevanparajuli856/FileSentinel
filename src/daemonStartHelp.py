@@ -9,13 +9,6 @@ from notifier import fileChange
 
 def daemonStart():
  # Determine base directory (whether running as .py or bundled .exe)
-    # base_dir = os.path.dirname(os.path.abspath(sys.executable))
-
-    # # Path to the services folder
-    # services_dir = os.path.join(base_dir, "services")
-
-    # # Full path to daemon.exe
-    # daemon_exe = os.path.join(services_dir, "monitor.exe")
 
     daemon_exe = r"C:\Program Files\FileSentinel\services\monitor.exe"
 
@@ -52,11 +45,6 @@ def daemonStart():
 
 #This function is for watchdog to restart the daemon if found stopped
 def daemonStartWatchdog():
-#  # Determine base directory (whether running as .py or bundled .exe)
-#     base_dir = os.path.dirname(os.path.abspath(sys.executable))
-
-#     # Full path to daemon.exe
-#     daemon_exe = os.path.join(base_dir, "monitor.exe")
 
     daemon_exe = r"C:\Program Files\FileSentinel\services\monitor.exe"
 

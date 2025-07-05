@@ -6,7 +6,7 @@ from fileutils import readTimeLogger, updateTimeLogger, readUserID
 
 #  Global Constants
 logDir = r"C:/Program Files/FileSentinel/logs"
-#logDir = "C:/Users/Jeevan/Desktop/FileSentinel/logs" # for testing only
+
 authLogFile = "auth.log"
 teleLogFile = "teleAlert.log"
 activityLogFile = "activity.log"
@@ -82,10 +82,3 @@ def logPurger():
 
     except Exception as purgeError:
         activityLogger(f"[LOG PURGE ERROR] {purgeError}")
-
-#Demo format for the logs
-#[2025-06-28 14:42:11] [ERROR] [Failed] Message sent/failed to send to Telegram: 'summary of msg' -> for telegram alert only fail msg
-#[2025-06-28 14:45:02] msg | UserID: userid | IP: 127.0.0.1  -> activity logs
-#[2025-06-28 14:42:11] [ALERT] msg(file path deleted, hash updated for file path)|userID: | IP: -> monitoring file log
-#[2025-06-28 14:45:02] LOGIN_ATTEMPT/UserID Change/Password Change/Auth Setup | UserID: userid | IP: 127.0.0.1 | Status: SUCCESS/FAILED  -> auth logs
-

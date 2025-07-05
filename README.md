@@ -1,6 +1,8 @@
 ![Program Logo](assets/logo.png)
 **FileSentinel** is a **Windows-only**, CLI-based **defensive cybersecurity tool** designed to help system administrators and security-conscious users **monitor file integrity in real time**.  
-It runs as a **persistent background daemon**, constantly watching for unauthorized file changes using **SHA-256 cryptographic hashing**. Upon detecting tampering, it sends **instant Telegram alerts** and logs the event for forensic review.
+It runs as a **persistent background daemon**, constantly watching for unauthorized file changes using **SHA-256 cryptographic hashing**. Upon detecting tampering, it sends **instant Telegram alerts** and logs the event for forensic review. FileSentinel interacts with the Windows operating system using Python's built-in modules like os, os.path, hashlib, ctypes,psutil, subprocess, and datetime, enabling file path validation, system privilege checks, secure file I/O, daemon-like behavior, and automated task scheduling.
+
+
 
 ---
 

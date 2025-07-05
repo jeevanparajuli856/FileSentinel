@@ -80,17 +80,3 @@ def dsupport(eventMsg: str):
     if not sendAlert(msg):
         failAlert(eventMsg)
 
-
-#demo format for the alert notification
-# 🔐 [FileSentinel Alert]
-# 📢 Message: LOGIN_ATTEMPT
-# 👤 UserID: admin
-# 🕒 Time: 2025-06-28 14:47:22
-# 📍 IP Address: 127.0.0.1
-# ✅ Status: FAILED
-
-# 🔐 [FileSentinel Alert]
-# 📢 Message: PROGRAM_KILL_ATTEMPT
-# 🕒 Time: <YYYY-MM-DD HH:MM:SS>
-# 📍 IP Address: 127.0.0.1
-# 🚫 Status:Alerted

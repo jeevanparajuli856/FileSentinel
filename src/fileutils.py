@@ -5,12 +5,12 @@ from datetime import datetime
 
 # Path to config file
 CONFIG_PATH = r"C:/Program Files/FileSentinel/config/sentinel_config.json"
-#CONFIG_PATH = "C:/Users/Jeevan/Desktop/FileSentinel/config/sentinel_config.json"
+
 
 # Default skeleton for initial config file creation
 SKELETON = {
-    "userid": "admin",
-    "password": "877c7b8095b7ed0152057fca0b91ff4c8a0faea3e2d1d0f2879f2f14b05bbdcd", #Password@123
+    "userid": "",
+    "password": "", 
     "bot_id": "",
     "chat_id": "",
     "log_start_time": "",

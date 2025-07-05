@@ -107,12 +107,3 @@ def changeUserID(new_userid: str) -> bool:
     authNotifier("UserID change attempt", new_userid, "SUCCESS")
     return True
 
-# log format: [2025-06-28 14:45:02] LOGIN_ATTEMPT/UserID Change/Password Change/Auth Setup | UserID: userid | IP: 127.0.0.1 | Status: SUCCESS/FAILED
-
-#Alert Format
-# 🔐 [FileSentinel Alert]
-#   message: LOGIN_ATTEMPT/UserID Change/Password Change/Auth Setup 
-# 👤 UserID: userid
-# 🕒 Time: 2025-06-28 14:47:22
-# 📍 IP Address: 127.0.0.1
-# ✅ Status: SUCCESS/FAILED
