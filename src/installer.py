@@ -6,12 +6,12 @@ from filepath_config import fileSetup, updateAllFileHash
 from fileutils import initializeConfig, updateTimeLogger, updateTimeMonitor
 
 # Constants
-BASE_DIR = r"C:/Program Files/FileSentinel"
+BASE_DIR = r"C:/Program Files/Integrixa"
 CONFIG_DIR = os.path.join(BASE_DIR, "config")
 LOG_DIR = os.path.join(BASE_DIR, "logs")
 MARKER_FILE = os.path.join(BASE_DIR, ".installed")
 
-#This functin creates the main FileSentinel directory structure and initializes config files.
+#This functin creates the main Integrixa directory structure and initializes config files.
 def installSetup():
     try:
         # Create main program directory
@@ -34,7 +34,24 @@ def installSetup():
         print(f"[!] Installation failed: {e}")
         return False
 
+#To make the configuration file of the program to only admin access we can use this function but have to run main.py with admin right to work
+# #This function restricts access to the config directory so only administrators can access it. Works on Windows using icacls command.
+# def managePermission():
+#     try:
+#           # Remove inherited permissions
+#         os.system(f'icacls "{CONFIG_DIR}" /inheritance:r')
 
+#         # Grant full access to SYSTEM and Administrators (your tool runs as Admin)
+#         os.system(f'icacls "{CONFIG_DIR}" /grant:r SYSTEM:F')
+#         os.system(f'icacls "{CONFIG_DIR}" /grant:r Administrators:F')
+
+#         # Deny WRITE access to Users and Everyone (read is OK for basic system ops)
+#         os.system(f'icacls "{CONFIG_DIR}" /grant:r Users:RW')
+
+#         return True
+#     except Exception as e:
+#         print(f"[!] managePermission() failed: {e}")
+#         return False
 
 #This function calls the function to update hashes for all monitored files.
 def updateDefaultFileHash():
@@ -54,7 +71,7 @@ def copyExecutablesToSystemPath():
     service_src = os.path.join(base_dir, "services")
 
     # Destination for permanent service executables
-    system_services_dir = r"C:\Program Files\FileSentinel\services"
+    system_services_dir = r"C:\Program Files\Integrixa\services"
     os.makedirs(system_services_dir, exist_ok=True)
 
     try:
@@ -67,8 +84,8 @@ def copyExecutablesToSystemPath():
 
 
 def writeWatchdogTaskXML():
-    exe_path = r"C:\Program Files\FileSentinel\services\watchdog.exe"
-    xml_path = r"C:\Program Files\FileSentinel\services\watchdog_task.xml"
+    exe_path = r"C:\Program Files\Integrixa\services\watchdog.exe"
+    xml_path = r"C:\Program Files\Integrixa\services\watchdog_task.xml"
 
     # Ensure the directory exists
     os.makedirs(os.path.dirname(xml_path), exist_ok=True)
@@ -76,7 +93,7 @@ def writeWatchdogTaskXML():
     xml_content = f"""<?xml version="1.0" encoding="UTF-16"?>
 <Task version="1.4" xmlns="http://schemas.microsoft.com/windows/2004/02/mit/task">
   <RegistrationInfo>
-    <Description>Start FileSentinel Watchdog when user logs in</Description>
+    <Description>Start Integrixa Watchdog when user logs in</Description>
   </RegistrationInfo>
   <Triggers>
     <LogonTrigger>
@@ -110,7 +127,7 @@ def writeWatchdogTaskXML():
   </Settings>
   <Actions Context="Author">
     <Exec>
-      <Command>C:\Program Files\FileSentinel\services\watchdog.exe</Command>
+      <Command>C:\Program Files\Integrixa\services\watchdog.exe</Command>
     </Exec>
   </Actions>
 </Task>

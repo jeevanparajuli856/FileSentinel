@@ -33,12 +33,12 @@ def cliMain(newinstalled: bool,msg:str): # true is new setup where false is alre
 # Shows a large ASCII welcome banner
 def bigWelcome():
   print(r"""
-___________.__.__           _________              __  .__              .__   
-\_   _____/|__|  |   ____  /   _____/ ____   _____/  |_|__| ____   ____ |  |  
- |    __)  |  |  | _/ __ \ \_____  \_/ __ \ /    \   __\  |/    \_/ __ \|  |  
- |     \   |  |  |_\  ___/ /        \  ___/|   |  \  | |  |   |  \  ___/|  |__
- \___  /   |__|____/\___  >_______  /\___  >___|  /__| |__|___|  /\___  >____/
-     \/                 \/        \/     \/     \/             \/     \/      
+.___        __                      .__                
+|   | _____/  |_  ____   ___________|__|__  ________   
+|   |/    \   __\/ __ \ / ___\_  __ \  \  \/  /\__  \  
+|   |   |  \  | \  ___// /_/  >  | \/  |>    <  / __ \_
+|___|___|  /__|  \___  >___  /|__|  |__/__/\_ \(____  /
+         \/          \/_____/                \/     \/ 
 """)
 
 #This function is used to clear the terminal
@@ -220,7 +220,7 @@ def setPassword():
 
 # This function help to stop monitor
 def killProgram():
-    choice = input("Are you sure you want to stop FileSentinel? (Y/N): ").strip().lower()
+    choice = input("Are you sure you want to stop File Monitoring? (Y/N): ").strip().lower()
     if choice == 'y' and readDaemonStatus() !="stop":
         print("[+] File monitoring stopped. Stopping...")
         activityLogger("File monitoring stopped by user.")
@@ -280,7 +280,7 @@ def updateAll():
 #This function main purpose is to call dsupport.py which is executable and it check whether the daemon is running or not
 def dSupportStart():
 
-    watchdog_exe =r"C:\Program Files\FileSentinel\services\watchdog.exe"
+    watchdog_exe =r"C:\Program Files\Integrixa\services\watchdog.exe"
 
     if not os.path.exists(watchdog_exe):
         print("[!] watchdog.exe not found.")
@@ -296,7 +296,7 @@ def dSupportStart():
             None,              # directory
             0                  # show window
         )
-        print("[+] Watchdog.exe started with admin rights.")
+        print("[+] watchdog.exe started with admin rights.")
     except Exception as e:
         print(f"[!] Failed to start watchdog.exe: {e}")
 
@@ -304,7 +304,7 @@ def dSupportStart():
 
 #This function help to make the file monitor watch dog to be auto startup when everytime the pc boot. Creating system to start causes issue as system dont have access to program files early
 def enableAutoStartup():
-    xml_path = r"C:\Program Files\FileSentinel\services\watchdog_task.xml"
+    xml_path = r"C:\Program Files\Integrixa\services\watchdog_task.xml"
 
     if not os.path.exists(xml_path):
         print(f"[!] Task XML file not found at: {xml_path}")
@@ -314,7 +314,7 @@ def enableAutoStartup():
     # Create new task from XML
     result = subprocess.run([
         "schtasks", "/Create",
-        "/TN", "FileSentinelWatchdog",
+        "/TN", "IntegrixaWatchdog",
         "/XML", xml_path,
         "/RU", "SYSTEM",
         "/F"
@@ -331,7 +331,7 @@ def enableAutoStartup():
 
 #This function help to disable the auto startup for the watchdog.
 def disableAutoStartup():
-    cmd = 'schtasks /Delete /TN "FileSentinelWatchdog" /F'
+    cmd = 'schtasks /Delete /TN "IntegrixaWatchdog" /F'
     os.system(cmd)
     print("[+] Scheduled Task stopped successfully.")
     activityLogger("Watchdog auto-start on boot has been disabled.")

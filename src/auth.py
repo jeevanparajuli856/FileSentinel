@@ -106,4 +106,3 @@ def changeUserID(new_userid: str) -> bool:
     authLogger("UserID change attempt", new_userid, "SUCCESS")
     authNotifier("UserID change attempt", new_userid, "SUCCESS")
     return True
-

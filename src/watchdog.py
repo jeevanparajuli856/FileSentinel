@@ -10,7 +10,7 @@ from notifier import fileChange
 from logger import activityLogger
 from notifier import fileChange
 
-PID_PATH = r"C:/Program Files/FileSentinel/config/daemon.pid" 
+PID_PATH = r"C:/Program Files/Integrixa/config/daemon.pid" 
 DAEMON_NAME = "monitor.exe" #change this if file change
 
 def isCorrectDaemon(pid):

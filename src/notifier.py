@@ -40,7 +40,7 @@ def sendAlert(alertMsg: str)->bool:
 
 # This function sends auth event alert
 def authNotifier(messageType: str, userID: str, status: str):
-    msg = f"""🔐 [FileSentinel Alert]
+    msg = f"""🔐 [Integrixa Alert]
 🕒 Time: {getCurrentTime()}
 📢 Message: {messageType}
 👤 UserID: {userID}
@@ -52,7 +52,7 @@ def authNotifier(messageType: str, userID: str, status: str):
 
 #This function sends file change alert
 def fileChange(eventMsg: str):
-    msg = f"""🔐 [FileSentinel Alert]
+    msg = f"""🔐 [Integrixa Alert]
 📢 Message: {eventMsg}
 🕒 Time: {getCurrentTime()}
 📍 IP Address: {getIPAddress()}
@@ -62,7 +62,7 @@ def fileChange(eventMsg: str):
 
 #This function sends program kill attempt alert
 def programKilled(eventMsg: str):
-    msg = f"""🔐 [FileSentinel Alert]
+    msg = f"""🔐 [Integrixa Alert]
 📢 Message: {eventMsg}
 🕒 Time: {getCurrentTime()}
 📍 IP Address: {getIPAddress()}
@@ -72,7 +72,7 @@ def programKilled(eventMsg: str):
 
 # This function sends daemon support alert
 def dsupport(eventMsg: str):
-    msg = f"""🔐 [FileSentinel Alert]
+    msg = f"""🔐 [Integrixa Alert]
 📢 Message: {eventMsg}
 🕒 Time: {getCurrentTime()}
 📍 IP Address: {getIPAddress()}

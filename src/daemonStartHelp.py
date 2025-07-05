@@ -7,9 +7,10 @@ import subprocess
 from logger import activityLogger
 from notifier import fileChange
 
+#This function help to start the daemon.py
 def daemonStart():
 
-    daemon_exe = r"C:\Program Files\FileSentinel\services\monitor.exe"
+    daemon_exe = r"C:\Program Files\Integrixa\services\monitor.exe"
 
     if not os.path.exists(daemon_exe):
         print("[!] monitor.exe not found.")
@@ -45,7 +46,7 @@ def daemonStart():
 #This function is for watchdog to restart the daemon if found stopped
 def daemonStartWatchdog():
 
-    daemon_exe = r"C:\Program Files\FileSentinel\services\monitor.exe"
+    daemon_exe = r"C:\Program Files\Integrixa\services\monitor.exe"
 
     if not os.path.exists(daemon_exe):
         
@@ -75,7 +76,7 @@ def daemonStartWatchdog():
 
 #This function check whether monitor.exe is already running or not.
 def isProcessRunning():
-    pid_path = r"C:/Program Files/FileSentinel/config/daemon.pid"
+    pid_path = r"C:/Program Files/Integrixa/config/daemon.pid"
     if not os.path.exists(pid_path):
         return False
 

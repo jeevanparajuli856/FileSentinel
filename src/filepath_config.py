@@ -4,8 +4,8 @@ import hashlib
 from notifier import fileChange
 from logger import activityLogger
 
-CONFIG_PATH = r"C:/Program Files/FileSentinel/config/file_list.json"
-
+CONFIG_PATH = r"C:/Program Files/Integrixa/config/file_list.json"
+#CONFIG_PATH = "C:/Users/Jeevan/Desktop/Integrixa/config/file_list.json"
 
 #This function help to setup the file_list.json in the default path with default file list and return boolean if able to setup or not
 def fileSetup():
@@ -105,7 +105,7 @@ def updateAllFileHash():
             paths[path] = new_hash
             updated += 1
     writeFileList(paths)
-    fileChange(f"All {updated} file hashes updated successfully.")
+    fileChange(f"{updated} file hashes updated successfully.")
     activityLogger("All hashes refreshed successfully.")
     return f"[+] Updated hashes for {updated} files."
 

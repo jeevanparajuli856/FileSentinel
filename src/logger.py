@@ -5,8 +5,8 @@ import time
 from fileutils import readTimeLogger, updateTimeLogger, readUserID 
 
 #  Global Constants
-logDir = r"C:/Program Files/FileSentinel/logs"
-
+logDir = r"C:/Program Files/Integrixa/logs"
+#logDir = "C:/Users/Jeevan/Desktop/Integrixa/logs" # for testing only
 authLogFile = "auth.log"
 teleLogFile = "teleAlert.log"
 activityLogFile = "activity.log"
@@ -82,3 +82,5 @@ def logPurger():
 
     except Exception as purgeError:
         activityLogger(f"[LOG PURGE ERROR] {purgeError}")
+
+

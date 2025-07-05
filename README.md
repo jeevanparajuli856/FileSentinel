@@ -1,6 +1,6 @@
 ![Program Logo](assets/logo.png)
-**FileSentinel** is a **Windows-only**, CLI-based **defensive cybersecurity tool** designed to help system administrators and security-conscious users **monitor file integrity in real time**.  
-It runs as a **persistent background daemon**, constantly watching for unauthorized file changes using **SHA-256 cryptographic hashing**. Upon detecting tampering, it sends **instant Telegram alerts** and logs the event for forensic review. FileSentinel interacts with the Windows operating system using Python's built-in modules like os, os.path, hashlib, ctypes,psutil, subprocess, and datetime, enabling file path validation, system privilege checks, secure file I/O, daemon-like behavior, and automated task scheduling.
+**Integrixa** is a **Windows-only**, CLI-based **defensive cybersecurity tool** designed to help system administrators and security-conscious users **monitor file integrity in real time**.  
+It runs as a **persistent background daemon**, constantly watching for unauthorized file changes using **SHA-256 cryptographic hashing**. Upon detecting tampering, it sends **instant Telegram alerts** and logs the event for forensic review. Integrixa interacts with the Windows operating system using Python's built-in modules like os, os.path, hashlib, ctypes,psutil, subprocess, and datetime, enabling file path validation, system privilege checks, secure file I/O, daemon-like behavior, and automated task scheduling.
 
 
 
@@ -52,14 +52,14 @@ It runs as a **persistent background daemon**, constantly watching for unauthori
 
 ## 🚀 Getting Started
 
-To install and use FileSentinel:
+To install and use Integrixa:
 
 1. Download and Extract the Package:
-   - Download FileSentinel_Package.zip from the Release v1 section and extract it.
+   - Download Integrixa_Package.zip from the Release v1 section and extract it.
    - After extraction. ensure the folder structure is as follow:
-      - The main folder should contain FileSentinel.exe
+      - The main folder should contain Integrixa.exe
       - Inside the main folder, there should be a service subfolder containing: monitor.exe and watchdog.exe
-2. Double click the FileSentinel.exe file to begin setup:
+2. Double click the Integrixa.exe file to begin setup:
     - Set your User ID and Password
     - Configure your Telegram Bot ID and Chat ID
     - Add the file paths you want to monitor
@@ -69,11 +69,11 @@ To install and use FileSentinel:
     - monitor.exe- Monitor the specified files for any changes. 
     - watchdog.exe - Ensures that monitor.exe is always running. If it stops or crashes watchdog.exe automatically restarts it and sends a Telegram alert.
     - This mechanism ensures tamper-proof, continous file integrity monitoring.
-![FileSentinel CLI Screenshot](assets/intro.png)
+![Integrixa CLI Screenshot](assets/intro.png)
 ---
 
 ## 📌 Stay Updated
-FileSentinel's first stable release is live!
+Integrixa's first stable release is live!
 Feel free to test, send feedback, or even collaborate with us by emailing:
 
 📬 jeevanparajuli856@gmail.com

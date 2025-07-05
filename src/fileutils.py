@@ -4,8 +4,8 @@ import hashlib
 from datetime import datetime
 
 # Path to config file
-CONFIG_PATH = r"C:/Program Files/FileSentinel/config/sentinel_config.json"
-
+CONFIG_PATH = r"C:/Program Files/Integrixa/config/sentinel_config.json"
+#CONFIG_PATH = "C:/Users/Jeevan/Desktop/Integrixa/config/sentinel_config.json"
 
 # Default skeleton for initial config file creation
 SKELETON = {
@@ -19,7 +19,7 @@ SKELETON = {
 }
 
 # Default salt for password hashing (for consistent, reversible comparison)
-DEFAULT_SALT = "xxxxxxxxx"   #change this salt
+DEFAULT_SALT = "safesentinelSalt2025"   #change this salt
 
 # This function ensure config file exists with skeleton
 # and also ensures the sentinel_config.json file exists. If not, creates it using the default skeleton.

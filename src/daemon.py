@@ -46,7 +46,7 @@ def stopFlag()->bool:
 
 if __name__ == "__main__":
     try:
-        with open(r"C:/Program Files/FileSentinel/config/daemon.pid", "w") as f:
+        with open(r"C:/Program Files/Integrixa/config/daemon.pid", "w") as f:
             f.write(str(os.getpid()))
         protectDaemon()
         activityLogger("File Monitoring exiting cleanly")
