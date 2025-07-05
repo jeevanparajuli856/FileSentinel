@@ -10,13 +10,13 @@ from notifier import fileChange
 from logger import activityLogger
 from notifier import fileChange
 
-PID_PATH = "C:/ProgramData/FileSentinel/config/daemon.pid" 
-
+PID_PATH = r"C:/Program Files/FileSentinel/config/daemon.pid" 
+DAEMON_NAME = "monitor.exe" #change this if file change
 
 def isCorrectDaemon(pid):
     try:
         proc = psutil.Process(pid)
-        return "daemon.exe" in proc.name().lower()
+        return DAEMON_NAME in proc.name().lower()
     except:
         return False
     
@@ -34,10 +34,10 @@ def readDaemonPID():
 
 # This function will monitor loop
 def monitorDaemon():
-    print("[+] Daemon Watchdog Started.")
+    activityLogger("Watch dog started to run")
+    fileChange("Watch dog started to run")
     while True:
         if stopFlag(): # This check whether the flag and if found stop then it will stop
-            print("Watch dog stopped to run")
             activityLogger("Watch Dog stopped to run")
             break
         pid = readDaemonPID()
@@ -45,8 +45,8 @@ def monitorDaemon():
             status = readDaemonStatus()
             if status == "running":
                 try:
-                    activityLogger("Found File monitored to forced stopped. Restarting")
-                    fileChange("Found File monitored to forced stopped. Restarting")
+                    activityLogger("Found File monitor to forced stopped. Restarting")
+                    fileChange("Found File monitor to forced stopped. Restarting")
                     daemonStartWatchdog()# This must start it as subprocess and rewrite daemon.pid
 
                 except Exception as e:
@@ -54,14 +54,11 @@ def monitorDaemon():
                     fileChange(f"Watchdog failed to restart daemon: {e}")
 
         time.sleep(10) # sleep when dSupport will run
-        print(readDaemonPID())
 
 def stopFlag()->bool:
     return readDaemonStatus()=="stop"
 
 
 if __name__ == "__main__":
-    activityLogger("Watch dog started to run")
-    print(readDaemonPID())
     monitorDaemon()
     sys.exit(0)

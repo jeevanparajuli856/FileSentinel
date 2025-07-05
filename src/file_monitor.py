@@ -11,7 +11,6 @@ def compareHash(current_hash: str, saved_hash: str) -> bool:
 def monitorFile():
     try:
         file_dict = readFileList()  # { "path": "hash" }
-        print("Monitoring started")
         if not file_dict:
             return False
 

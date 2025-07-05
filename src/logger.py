@@ -5,7 +5,7 @@ import time
 from fileutils import readTimeLogger, updateTimeLogger, readUserID 
 
 #  Global Constants
-logDir = "C:/ProgramData/FileSentinel/logs"
+logDir = r"C:/Program Files/FileSentinel/logs"
 #logDir = "C:/Users/Jeevan/Desktop/FileSentinel/logs" # for testing only
 authLogFile = "auth.log"
 teleLogFile = "teleAlert.log"

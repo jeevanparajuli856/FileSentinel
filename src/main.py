@@ -4,18 +4,22 @@ from installer import install
 from cli import cliMain
 
 # Define all required paths
-BASE_DIR = "C:/ProgramData/FileSentinel"
+BASE_DIR = r"C:/Program Files/FileSentinel"
 CONFIG_DIR = os.path.join(BASE_DIR, "config")
 LOG_DIR = os.path.join(BASE_DIR, "logs")
 CONFIG_FILE = os.path.join(CONFIG_DIR, "sentinel_config.json")
 FILE_LIST = os.path.join(CONFIG_DIR, "file_list.json")
 INSTALL_FLAG = os.path.join(BASE_DIR, ".installed")
+SERVICE_DIR = os.path.join(BASE_DIR,"services")
 
 #Checks whether FileSentinel has already been installed correctly. If any critical file or folder is missing, returns False.
 def checkInstallation():
     if not os.path.exists(INSTALL_FLAG):
-        print("installed")
         return False
+    if not os.path.exists(SERVICE_DIR):
+        print("[!] Missing or incomplete installation detected. Reinstalling components...")
+        return False
+    
     if not os.path.exists(BASE_DIR):
         print("[!] Missing or incomplete installation detected. Reinstalling components...")
         return False

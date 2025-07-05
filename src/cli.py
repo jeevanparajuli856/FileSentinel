@@ -4,6 +4,7 @@ import sys
 import ctypes
 import signal
 import time
+import psutil
 from auth import setAuth, checkAuth, changeUserID, changePassword
 from fileutils import setTelegramId,setDaemonStatus,readDaemonStatus
 from filepath_config import showFilePath, addFilePath, removeFilePath, updateFileHash, updateAllFileHash
@@ -275,21 +276,26 @@ def updateHash():
 def updateAll():
     print(updateAllFileHash())
 
+
 #This function main purpose is to call dsupport.py which is executable and it check whether the daemon is running or not
 def dSupportStart():
  # Determine base directory (whether running as .py or bundled .exe)
-    base_dir = os.path.dirname(os.path.abspath(sys.executable))
-    print(base_dir)
+    # base_dir = os.path.dirname(os.path.abspath(sys.executable))
+    # print(base_dir)
 
-    # Path to the services folder
-    services_dir = os.path.join(base_dir, "services")
+    # # Path to the services folder
+    # services_dir = os.path.join(base_dir, "services")
 
-    # Full path to daemon.exe
-    watchdog_exe = os.path.join(services_dir, "watchdog.exe")
+    # # Full path to daemon.exe
+    # watchdog_exe = os.path.join(services_dir, "watchdog.exe")
+
+
+    watchdog_exe =r"C:\Program Files\FileSentinel\services\watchdog.exe"
 
     if not os.path.exists(watchdog_exe):
         print("[!] watchdog.exe not found.")
         return
+    
     try:
         # Use ShellExecuteW with "runas" verb to elevate
         ctypes.windll.shell32.ShellExecuteW(
@@ -298,21 +304,75 @@ def dSupportStart():
             watchdog_exe,      # file
             None,              # parameters
             None,              # directory
-            1                  # show window
+            0                  # show window
         )
-        print("[+] daemon.exe started with admin rights.")
+        print("[+] Watchdog.exe started with admin rights.")
     except Exception as e:
         print(f"[!] Failed to start watchdog.exe: {e}")
 
-#This function help to make the file monitor watch dog to be auto startup when everytime the pc boot.
+
+
+# #This function help to make the file monitor watch dog to be auto startup when everytime the pc boot. Creating system to start causes issue as system dont have access to program files early
+# def enableAutoStartup():
+#     # base_path = os.path.dirname(os.path.abspath(sys.executable)) # this will give base directory
+#     # exe_path = os.path.join(base_path, "services", "watchdog.exe") # it will append service/watchdog.exe
+    
+#     exe_path = r"C:\ProgramData\FileSentinel\services\watchdog.exe"
+    
+#     if not os.path.exists(exe_path):
+#         print(f"[!] watchdog.exe not found at: {exe_path}")
+#         return
+
+#     result = subprocess.run([
+#         "schtasks",
+#         "/Create",
+#         "/SC", "ONSTART",
+#         "/TN", "FileSentinelWatchdog",
+#         "/TR", r"C:\ProgramData\FileSentinel\services\watchdog.exe",
+#         "/RU", "SYSTEM",      # Run As SYSTEM account
+#         "/DELAY", "0002:00"
+#         "/F"                  # Force overwrite
+#     ], capture_output=True, text=True)
+
+#     if result.returncode == 0:
+#         print("[+] Scheduled Task created successfully.")
+#         activityLogger("Watchdog will now auto-start on system boot.")
+#     else:
+#         print("[!] Failed to create task:")
+#         print(result.stderr)
+#         activityLogger(f"Failed to create watchdog task: {result.stderr}")
+
+
+#This function help to make the file monitor watch dog to be auto startup when everytime the pc boot. Creating system to start causes issue as system dont have access to program files early
 def enableAutoStartup():
-    exe_path = os.path.join(os.path.dirname(os.path.abspath(sys.executable)), "watchdog.exe")
-    cmd = f'schtasks /Create /SC ONLOGON /TN "FileSentinelWatchdog" /TR "{exe_path}" /RL HIGHEST /F'
-    os.system(cmd)
-    activityLogger("Watchdog will now auto-start on system boot.")
+    xml_path = r"C:\Program Files\FileSentinel\services\watchdog_task.xml"
+
+    if not os.path.exists(xml_path):
+        print(f"[!] Task XML file not found at: {xml_path}")
+        return
+    
+    
+    # Create new task from XML
+    result = subprocess.run([
+        "schtasks", "/Create",
+        "/TN", "FileSentinelWatchdog",
+        "/XML", xml_path,
+        "/RU", "SYSTEM",
+        "/F"
+    ], capture_output=True, text=True)
+
+    if result.returncode == 0:
+        print("[+] Scheduled task registered successfully.")
+    else:
+        print("[!] Failed to register scheduled task:")
+        print(result.stderr)
+
+
+
 
 #This function help to disable the auto startup for the watchdog.
 def disableAutoStartup():
     cmd = 'schtasks /Delete /TN "FileSentinelWatchdog" /F'
     os.system(cmd)
+    print("[+] Scheduled Task stopped successfully.")
     activityLogger("Watchdog auto-start on boot has been disabled.")

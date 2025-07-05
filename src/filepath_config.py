@@ -4,7 +4,7 @@ import hashlib
 from notifier import fileChange
 from logger import activityLogger
 
-CONFIG_PATH = "C:/ProgramData/FileSentinel/config/file_list.json"
+CONFIG_PATH = r"C:/Program Files/FileSentinel/config/file_list.json"
 #CONFIG_PATH = "C:/Users/Jeevan/Desktop/FileSentinel/config/file_list.json"
 
 #This function help to setup the file_list.json in the default path with default file list and return boolean if able to setup or not

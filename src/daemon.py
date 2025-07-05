@@ -14,7 +14,6 @@ def runFileMonitor():
         last_time_str = readTimeMonitor()
         last_time = datetime.strptime(last_time_str, "%Y-%m-%d %H:%M:%S")
         current_time = datetime.now()
-        print("checking time completed")#Remove after testing
         if current_time - last_time >= timedelta(minutes=2): #Checking the time between current and last run
             activityLogger("File monitoring started.")
             success = monitorFile()
@@ -32,11 +31,9 @@ def protectDaemon():
     while True:
         try:
             if not stopFlag(): #seeing whether the stop flag is in config or not
-                print("checkingFileMonitor") #Remove after testing
                 runFileMonitor()
                 time.sleep(7)  # Sleep 60s between checks
             else:
-                print("File monitoring stop command received. Stopping")
                 activityLogger("File monitoring stop command received. Stopping")
                 fileChange("File monitoring stop command received. Stopping")  
                 break
@@ -49,9 +46,7 @@ def stopFlag()->bool:
 
 if __name__ == "__main__":
     try:
-        print("Launching File monitoring")
-        activityLogger("File monitoring started")
-        with open("C:/ProgramData/FileSentinel/config/daemon.pid", "w") as f:
+        with open(r"C:/Program Files/FileSentinel/config/daemon.pid", "w") as f:
             f.write(str(os.getpid()))
         protectDaemon()
         activityLogger("File Monitoring exiting cleanly")

@@ -2,19 +2,33 @@
 import os
 import sys
 import ctypes
+import psutil
+import subprocess
+from logger import activityLogger
+from notifier import fileChange
+
 def daemonStart():
  # Determine base directory (whether running as .py or bundled .exe)
-    base_dir = os.path.dirname(os.path.abspath(sys.executable))
+    # base_dir = os.path.dirname(os.path.abspath(sys.executable))
 
-    # Path to the services folder
-    services_dir = os.path.join(base_dir, "services")
+    # # Path to the services folder
+    # services_dir = os.path.join(base_dir, "services")
 
-    # Full path to daemon.exe
-    daemon_exe = os.path.join(services_dir, "daemon.exe")
+    # # Full path to daemon.exe
+    # daemon_exe = os.path.join(services_dir, "monitor.exe")
+
+    daemon_exe = r"C:\Program Files\FileSentinel\services\monitor.exe"
 
     if not os.path.exists(daemon_exe):
-        print("[!] daemon.exe not found.")
+        print("[!] monitor.exe not found.")
+        activityLogger("monitor.exe not found.")
+        fileChange("monitor.exe not found.")
         return
+
+    if isProcessRunning():
+        print("[!] monitor.exe is already running. Skipping launch.")
+        return
+    
 
     try:
         # Use ShellExecuteW with "runas" verb to elevate
@@ -24,23 +38,35 @@ def daemonStart():
             daemon_exe,        # file
             None,              # parameters
             None,              # directory
-            1                  # show window
+            0                  # show window
         )
-        print("[+] daemon.exe started with admin rights.")
+        print("[+] monitor.exe started with admin rights.")
+        activityLogger(f"monitor.exe started with admin rights.")
+        fileChange("monitor.exe started with admin rights.")
         
     except Exception as e:
-        print(f"[!] Failed to start daemon.exe: {e}")
+        print(f"[!] Failed to start monitor.exe: {e}")
+        activityLogger(f"failed to start monitor.exe: {e}")
+        fileChange("failed to start monitor.exe")
+
 
 #This function is for watchdog to restart the daemon if found stopped
 def daemonStartWatchdog():
- # Determine base directory (whether running as .py or bundled .exe)
-    base_dir = os.path.dirname(os.path.abspath(sys.executable))
+#  # Determine base directory (whether running as .py or bundled .exe)
+#     base_dir = os.path.dirname(os.path.abspath(sys.executable))
 
-    # Full path to daemon.exe
-    daemon_exe = os.path.join(base_dir, "daemon.exe")
+#     # Full path to daemon.exe
+#     daemon_exe = os.path.join(base_dir, "monitor.exe")
+
+    daemon_exe = r"C:\Program Files\FileSentinel\services\monitor.exe"
 
     if not os.path.exists(daemon_exe):
-        print("[!] daemon.exe not found.")
+        
+        activityLogger("monitor.exe not found.")
+        fileChange("monitor.exe not found.")
+        return
+    
+    if isProcessRunning(): #if found running it just skip the launch of monitor.exe
         return
 
     try:
@@ -51,9 +77,25 @@ def daemonStartWatchdog():
             daemon_exe,        # file
             None,              # parameters
             None,              # directory
-            1                  # show window
+            0                 # show window
         )
-        print("[+] daemon.exe started with admin rights.")
+        activityLogger("[+] daemon.exe re-started with admin rights.")
+        fileChange("[+] daemon.exe re-started with admin rights.")
         
     except Exception as e:
-        print(f"[!] Failed to start daemon.exe: {e}")
+        activityLogger(f"failed to start monitor.exe: {e}")
+        fileChange("failed to start monitor.exe")
+
+#This function check whether monitor.exe is already running or not.
+def isProcessRunning():
+    pid_path = r"C:/Program Files/FileSentinel/config/daemon.pid"
+    if not os.path.exists(pid_path):
+        return False
+
+    try:
+        with open(pid_path, 'r') as f:
+            pid = int(f.read().strip())
+        proc = psutil.Process(pid)
+        return "monitor.exe" in proc.name().lower()
+    except (psutil.NoSuchProcess, psutil.AccessDenied, ValueError):
+        return False
